@@ -1,12 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, createStyles, makeStyles, Typography } from "@material-ui/core";
+import { Button, Container, createStyles, Drawer, List, ListItem, ListItemText, makeStyles, Typography } from "@material-ui/core";
 import { getImageFromFile } from "../src/image";
 import Canvas from "../src/Canvas";
 
+const drawerWidth = 320;
+
 const useStyles = makeStyles(theme => createStyles({
   app: {
-    backgroundColor: theme.palette.background.default,
-    padding: "16px 0"
+    display: "flex",
+    backgroundColor: theme.palette.background.default
+  },
+  main: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    height: "100vh",
+    padding: 32
+  },
+  drawer: {
+    width: drawerWidth
+  },
+  button: {
+    flexGrow: 1
   }
 }));
 
@@ -29,17 +42,27 @@ export default function App() {
 
   return (
     <div className={styles.app}>
-      <Container maxWidth="md">
-        <div style={{ marginBottom: 16 }}>
-          <Button component="label" variant="outlined" style={{ marginRight: 8 }}>
-            Load Image
-            <input type="file" accept="image/*" hidden onChange={handleInputChange} />
-          </Button>
-          <Button variant="contained" color="primary">Apply</Button>
-        </div>
-        <Typography>{filename ?? "Load an image to continue"}</Typography>
+      <main className={styles.main}>
         {image ? <Canvas image={image} fetchImageData={setInputData} /> : false}
-      </Container>
+      </main>
+      <Drawer variant="permanent" open classes={{ paper: styles.drawer }} anchor="right">
+        <List disablePadding>
+          <ListItem>
+            <ListItemText
+              primary="Pixelate"
+              secondary={filename ?? "Load an image to continue"}
+              primaryTypographyProps={{ variant: "h6" }}
+            />
+          </ListItem>
+          <ListItem>
+            <Button component="label" variant="outlined" className={styles.button} style={{ marginRight: 8 }}>
+              Load Image
+              <input type="file" accept="image/*" hidden onChange={handleInputChange} />
+            </Button>
+            <Button variant="contained" color="primary" className={styles.button}>Apply</Button>
+          </ListItem>
+        </List>
+      </Drawer>
     </div>
   );
 }
