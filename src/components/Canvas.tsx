@@ -6,7 +6,7 @@ const useStyles = makeStyles(theme => createStyles({
     width: "100%",
     height: "100%",
     imageRendering: "pixelated",
-    objectFit: "scale-down"
+    objectFit: "contain"
   }
 }));
 

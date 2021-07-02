@@ -5,8 +5,8 @@ const useStyles = makeStyles(theme => createStyles({
   welcome: {
     width: "100%",
     height: "100%",
-    border: "12px dashed lightgrey",
-    borderRadius: 8,
+    border: `12px dashed ${theme.palette.divider}`,
+    // borderRadius: 8, // buggy on firefox
     display: "flex",
     justifyContent: "center",
     alignItems: "center"
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => createStyles({
   typography: {
     fontSize: 56,
     fontWeight: "bold",
-    color: "lightgrey"
+    color: theme.palette.divider
   }
 }));
 

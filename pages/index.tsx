@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Button, Collapse, Container, createStyles, Divider, Drawer, List, ListItem, ListItemText, makeStyles, Paper, Slider, Typography } from "@material-ui/core";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Collapse, createStyles, Drawer, List, ListItem, ListItemText, makeStyles, Paper, Slider } from "@material-ui/core";
 import { getImageFromFile } from "../src/image";
-import Canvas from "../src/Canvas";
+import Canvas from "../src/components/Canvas";
 import { ExpandLess } from "@material-ui/icons";
-import Welcome from "../src/Welcome";
+import Welcome from "../src/components/Welcome";
+import { ImageWorkerApi } from "../src/image/worker";
+import * as Comlink from "comlink";
+import * as DitherMethods from "../src/image/dither";
 
 const drawerWidth = 320;
 
@@ -36,11 +39,21 @@ const useStyles = makeStyles(theme => createStyles({
 }));
 
 export default function App() {
+  console.log(`Browser: ${process.browser}`)
+
   const styles = useStyles();
   const [filename, setFilename] = useState<string | undefined>();
   const [image, setImage] = useState<HTMLImageElement | undefined>();
   const [inputData, setInputData] = useState<ImageData | undefined>();
+  const [outputData, setOutputData] = useState<ImageData | undefined>();
   const [p, setP] = useState(true);
+  const imageWorker = useRef<Comlink.Remote<ImageWorkerApi>>();
+
+  useEffect(() => {
+    const worker = new Worker(new URL("../src/image/worker.ts", import.meta.url), { type: "module" })
+    imageWorker.current = Comlink.wrap<ImageWorkerApi>(worker);
+    return () => worker.terminate();
+  }, []);
 
   async function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (!event.target.files || !event.target.files[0]) {
@@ -49,6 +62,17 @@ export default function App() {
     const file = event.target.files[0];
     setFilename(file.name);
     setImage(await getImageFromFile(file));
+    setInputData(undefined);
+    setOutputData(undefined);
+  }
+
+  async function handleApply() {
+    if (!inputData || !imageWorker.current) {
+      return;
+    }
+    const output = await imageWorker.current.apply(inputData, 16, 24, DitherMethods.FloydSteinberg);
+    console.log(output);
+    setOutputData(output);
   }
 
   useEffect(() => console.log(inputData), [inputData]);
@@ -57,7 +81,7 @@ export default function App() {
     <div className={styles.app}>
       <main className={styles.main}>
         {image
-          ? <Canvas image={image} fetchImageData={setInputData} />
+          ? <Canvas image={outputData ?? image} fetchImageData={setInputData} />
           : <Welcome />}
       </main>
 
@@ -67,7 +91,7 @@ export default function App() {
             Load Image
             <input type="file" accept="image/*" hidden onChange={handleInputChange} />
           </Button>
-          <Button color="secondary">Apply</Button>
+          <Button color="secondary" onClick={handleApply}>Apply</Button>
         </Paper>
 
         <Paper variant="outlined" className={styles.paper}>
