@@ -39,12 +39,14 @@ const useStyles = makeStyles(theme => createStyles({
   },
   paper: {
     padding: "8px 0",
-    borderRadius: 8,
     boxShadow: "none",
     margin: "8px 0",
     [theme.breakpoints.down("sm")]: {
-      boxShadow: theme.shadows[10]
+      boxShadow: theme.shadows[2]
     }
+  },
+  paperOnBackdrop: {
+    border: theme.palette.type === "light" ? "1px solid white" : undefined
   },
   parameter: {
     display: "block"
@@ -93,8 +95,8 @@ export default function App() {
     setOutputData(output);
   }
 
-  const drawer = <>
-    <Paper variant="outlined" className={styles.paper} style={{ padding: 8 }}>
+  const drawer = (type: "permanent" | "temporary") => <>
+    <Paper variant="outlined" className={`${styles.paper} ${type === "temporary" ? styles.paperOnBackdrop : ""}`} style={{ padding: 8 }}>
       <Button component="label" style={{ marginRight: 8 }}>
         Load Image
         <input type="file" accept="image/*" hidden onChange={handleInputChange} />
@@ -102,7 +104,7 @@ export default function App() {
       <Button color="secondary" onClick={handleApply}>Apply</Button>
     </Paper>
 
-    <Paper variant="outlined" className={styles.paper}>
+    <Paper variant="outlined" className={`${styles.paper} ${type === "temporary" ? styles.paperOnBackdrop : ""}`}>
       <List disablePadding>
         <ListItem button onClick={() => setOpenParameters(!openParameters)} dense>
           <ListItemText primary="Parameters" primaryTypographyProps={{ variant: "body1" }} />
@@ -155,7 +157,7 @@ export default function App() {
           classes={{ paper: styles.drawer }}
           anchor="right"
         >
-          {drawer}
+          {drawer("permanent")}
         </Drawer>
       </Hidden>
       <Hidden mdUp>
@@ -174,7 +176,7 @@ export default function App() {
           classes={{ paper: styles.drawer }}
           anchor="right"
         >
-          {drawer}
+          {drawer("temporary")}
         </Drawer>
       </Hidden>
     </div>

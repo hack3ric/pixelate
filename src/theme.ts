@@ -14,6 +14,11 @@ export default function makeTheme(prefersDarkMode: boolean): Theme {
             overflow: "hidden"
           }
         }
+      },
+      MuiPaper: {
+        rounded: {
+          borderRadius: 8
+        }
       }
     }
   });
