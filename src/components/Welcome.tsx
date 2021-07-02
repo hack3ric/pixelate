@@ -10,10 +10,14 @@ const useStyles = makeStyles(theme => createStyles({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    textAlign: "center",
     padding: 16
   },
   typography: {
     fontSize: 56,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 32
+    },
     fontWeight: "bold",
     color: theme.palette.divider
   }
