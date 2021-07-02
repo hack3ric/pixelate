@@ -10,6 +10,9 @@ export default function applyColor(input: ImageData, palette: Uint8ClampedArray[
         input.data[i + j] = paletteColor[j];
         for (let p of dither) {
           const errI = xyToI(x + p[0], y + p[1], input.width, input.height);
+          if (errI < 0) {
+            continue;
+          }
           input.data[errI + j] += error[j] * p[2];
         }
       }

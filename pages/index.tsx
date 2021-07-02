@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, Collapse, createStyles, Drawer, List, ListItem, ListItemText, makeStyles, Paper, Slider } from "@material-ui/core";
 import { getImageFromFile } from "../src/image";
 import Canvas from "../src/components/Canvas";
-import { ExpandLess } from "@material-ui/icons";
+import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import Welcome from "../src/components/Welcome";
 import { ImageWorkerApi } from "../src/image/worker";
 import * as Comlink from "comlink";
@@ -26,9 +26,6 @@ const useStyles = makeStyles(theme => createStyles({
     padding: "24px 32px"
   },
   drawer: {
-    // [theme.breakpoints.down("sm")]: {
-    //   display: "none"
-    // },
     width: drawerWidth,
     background: "transparent",
     border: "none",
@@ -54,7 +51,7 @@ export default function App() {
   const [image, setImage] = useState<HTMLImageElement | undefined>();
   const [inputData, setInputData] = useState<ImageData | undefined>();
   const [outputData, setOutputData] = useState<ImageData | undefined>();
-  const [p, setP] = useState(true);
+  const [openParameters, setOpenParameters] = useState(true);
   const imageWorker = useRef<Comlink.Remote<ImageWorkerApi>>();
 
   useEffect(() => {
@@ -104,11 +101,11 @@ export default function App() {
 
         <Paper variant="outlined" className={styles.paper}>
           <List disablePadding>
-            <ListItem button onClick={() => setP(!p)} dense>
+            <ListItem button onClick={() => setOpenParameters(!openParameters)} dense>
               <ListItemText primary="Parameters" primaryTypographyProps={{ variant: "body1" }} />
-              <ExpandLess />
+              {openParameters ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
-            <Collapse in={p}>
+            <Collapse in={openParameters}>
               <ListItem className={styles.parameter}>
                 <ListItemText primary="Scale" primaryTypographyProps={{ variant: "body2", color: "textSecondary" }} />
                 <Slider color="secondary" />
