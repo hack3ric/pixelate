@@ -4,7 +4,10 @@ export default function makeTheme(prefersDarkMode: boolean): Theme {
   console.log(prefersDarkMode);
   return createMuiTheme({
     palette: {
-      type: prefersDarkMode ? "dark" : "light"
+      type: prefersDarkMode ? "dark" : "light",
+      // secondary: {
+      //   main: "#00ffff"
+      // }
     },
     overrides: {
       MuiCssBaseline: {
