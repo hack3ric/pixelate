@@ -9,7 +9,8 @@ const useStyles = makeStyles(theme => createStyles({
     // borderRadius: 8, // buggy on firefox
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    padding: 16
   },
   typography: {
     fontSize: 56,

@@ -13,14 +13,22 @@ const drawerWidth = 320;
 const useStyles = makeStyles(theme => createStyles({
   app: {
     display: "flex",
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
+    width: "100%",
+    height: "100%"
   },
   main: {
     width: `calc(100% - ${drawerWidth}px)`,
-    height: "100vh",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%"
+    },
+    height: "100%",
     padding: "24px 32px"
   },
   drawer: {
+    // [theme.breakpoints.down("sm")]: {
+    //   display: "none"
+    // },
     width: drawerWidth,
     background: "transparent",
     border: "none",
