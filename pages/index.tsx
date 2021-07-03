@@ -8,24 +8,24 @@ import { ImageWorkerApi } from "../src/image/worker";
 import * as Comlink from "comlink";
 import * as DitherMethods from "../src/image/dither";
 import SidebarPaper from "../src/components/SidebarPaper";
+import Head from "next/head";
 
 const drawerWidth = 320;
 
 const useStyles = makeStyles(theme => createStyles({
   app: {
-    display: "flex",
     backgroundColor: theme.palette.background.default,
     width: "100%",
     height: "100%"
   },
   main: {
     width: `calc(100% - ${drawerWidth}px)`,
+    height: "100%",
+    padding: "24px 32px",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
       padding: "16px"
-    },
-    height: "100%",
-    padding: "24px 32px"
+    }
   },
   drawer: {
     width: drawerWidth,
@@ -133,6 +133,10 @@ export default function App() {
 
   return (
     <div className={styles.app}>
+      <Head>
+        <title>{filename ? `${filename} - Pixelate` : "Pixelate"}</title>
+      </Head>
+
       <main className={styles.main}>
         {image ? <Canvas
           image={outputData ?? image}
