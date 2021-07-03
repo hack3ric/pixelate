@@ -5,7 +5,8 @@ const useStyles = makeStyles(theme => createStyles({
   canvas: {
     width: "100%",
     height: "100%",
-    imageRendering: "pixelated",
+    // Firefox doesn't support "image-rendering: pixelated" right now
+    imageRendering: "crisp-edges",
     objectFit: "contain"
   }
 }));

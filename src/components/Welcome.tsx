@@ -6,7 +6,8 @@ const useStyles = makeStyles(theme => createStyles({
     width: "100%",
     height: "100%",
     border: `12px dashed ${theme.palette.divider}`,
-    // borderRadius: 8, // buggy on firefox
+    // Looks buggy on Firefox
+    // borderRadius: 8,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
