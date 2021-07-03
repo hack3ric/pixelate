@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, createStyles, Drawer, Fab, Hidden, makeStyles } from "@material-ui/core";
+import { Button, CircularProgress, createStyles, Drawer, Fab, Hidden, makeStyles, Snackbar } from "@material-ui/core";
 import { getImageFromFile } from "../src/image";
 import Canvas from "../src/components/Canvas";
 import { ChevronLeft } from "@material-ui/icons";
@@ -11,7 +11,7 @@ import SidebarPaper from "../src/components/SidebarPaper";
 import Head from "next/head";
 import Parameters from "../src/components/Parameters";
 
-const drawerWidth = 320;
+const drawerWidth = 340;
 
 const useStyles = makeStyles(theme => createStyles({
   app: {
@@ -22,10 +22,10 @@ const useStyles = makeStyles(theme => createStyles({
   main: {
     width: `calc(100% - ${drawerWidth}px)`,
     height: "100%",
-    padding: "24px 32px",
+    padding: 24,
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      padding: "16px"
+      padding: 8
     }
   },
   drawer: {
@@ -36,13 +36,18 @@ const useStyles = makeStyles(theme => createStyles({
     padding: 16,
     boxShadow: "none",
     [theme.breakpoints.up("md")]: {
-      paddingLeft: 0,
+      paddingLeft: 0
     }
   },
   expandDrawerButton: {
     position: "absolute",
     top: 8,
     right: 8
+  },
+  snackbarContent: {
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    fontSize: "1rem"
   }
 }));
 
@@ -55,6 +60,7 @@ export default function App() {
   const [inputData, setInputData] = useState<ImageData | undefined>();
   const [outputData, setOutputData] = useState<ImageData | undefined>();
   const [mobileOpenDrawer, setMobileOpenDrawer] = useState(false);
+  const [generating, setGenerating] = useState(false);
 
   const [size, setSize] = useState(512);
   const [colorCount, setColorCount] = useState(24);
@@ -72,17 +78,20 @@ export default function App() {
     const file = event.target.files[0];
     setFilename(file.name);
     setImage(await getImageFromFile(file));
-    setInputData(undefined);
+    // setInputData(undefined);
     setOutputData(undefined);
   }
 
   async function handleApply() {
-    if (!inputData || !imageWorker.current) {
+    if (!inputData || !imageWorker.current || generating) {
       return;
     }
+
+    setGenerating(true);
     const output = await imageWorker.current.apply(inputData, size, colorCount, DitherMethods.FloydSteinberg);
     console.log(output);
     setOutputData(output);
+    setGenerating(false);
   }
 
   function handleDrawerToggle() {
@@ -97,8 +106,8 @@ export default function App() {
   }
 
   const drawerContent = <>
-    <SidebarPaper style={{ padding: 8 }}>
-      <Button component="label" style={{ marginRight: 8 }}>
+    <SidebarPaper style={{ padding: 8, display: "flex", alignItems: "center" }}>
+      <Button component="label" disabled={generating} style={{ marginRight: 8 }}>
         Load Image
         <input type="file" accept="image/*" hidden onChange={handleInputChange} />
       </Button>
@@ -152,6 +161,14 @@ export default function App() {
           {drawerContent}
         </Drawer>
       </Hidden>
+
+      <Snackbar
+        open={generating}
+        ContentProps={{ className: styles.snackbarContent }}
+        message="Generating"
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        action={<CircularProgress color="secondary" size="1rem" style={{ marginRight: 8 }} />}
+      />
     </div>
   );
 }

@@ -36,10 +36,11 @@ export default function Parameters(props: ParametersProps) {
             <Slider
               color="secondary"
               value={props.size}
-              min={256}
+              min={128}
               max={1024}
-              step={128}
+              step={64}
               valueLabelDisplay="auto"
+              marks={[{ value: 256 }, { value: 512 }, { value: 1024 }]}
               onChange={(_e, newValue) => props.onSizeChange(newValue as number)}
             />
           </ListItem>
@@ -53,8 +54,9 @@ export default function Parameters(props: ParametersProps) {
               value={props.colorCount}
               min={8}
               max={64}
-              step={8}
+              step={4}
               valueLabelDisplay="auto"
+              marks={[{ value: 16 }, { value: 32 }, { value: 64 }]}
               onChange={(_e, newValue) => props.onColorCountChange(newValue as number)}
             />
           </ListItem>
