@@ -5,9 +5,13 @@ const useStyles = makeStyles(theme => createStyles({
   canvas: {
     width: "100%",
     height: "100%",
-    // Firefox doesn't support "image-rendering: pixelated" right now
-    imageRendering: "crisp-edges",
     objectFit: "contain"
+  },
+  pixelated: {
+    imageRendering: "pixelated"
+  },
+  crispEdges: {
+    imageRendering: "crisp-edges"
   }
 }));
 
@@ -53,6 +57,6 @@ export default function Canvas({ image, fetchImageData }: CanvasProps) {
   }, [image]); // eslint-disable-line
 
   return (
-    <canvas ref={ref} className={styles.canvas} />
+    <canvas ref={ref} className={`${styles.canvas} ${styles.crispEdges} ${styles.pixelated}`} />
   )
 }
