@@ -1,3 +1,8 @@
+export type DitherMethodPreset =
+  | "FloydSteinberg"
+  | "Aktinson"
+  | "Eric";
+
 export type DitherMethod = [number, number, number][];
 
 export const None: DitherMethod = [];

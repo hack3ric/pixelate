@@ -10,6 +10,7 @@ import * as DitherMethods from "../image/dither";
 import SidebarPaper from "./SidebarPaper";
 import Head from "next/head";
 import Parameters from "./Parameters";
+import { DitherMethodPreset } from "../image/dither";
 
 const drawerWidth = 340;
 
@@ -57,6 +58,7 @@ export default function App() {
 
   const [size, setSize] = useState(512);
   const [colorCount, setColorCount] = useState(24);
+  const [dither, setDither] = useState<DitherMethodPreset>("Eric");
 
   useEffect(() => {
     const worker = new Worker(new URL("../image/worker.ts", import.meta.url), { type: "module" });
@@ -81,7 +83,7 @@ export default function App() {
     }
 
     setGenerating(true);
-    const output = await imageWorker.current.apply(inputData, size, colorCount, DitherMethods.FloydSteinberg);
+    const output = await imageWorker.current.apply(inputData, size, colorCount, DitherMethods[dither]);
     console.log(output);
     setOutputData(output);
     setGenerating(false);
@@ -109,6 +111,7 @@ export default function App() {
     <Parameters
       size={size} onSizeChange={setSize}
       colorCount={colorCount} onColorCountChange={setColorCount}
+      dither={dither} onDitherChange={setDither}
     />
   </>;
 

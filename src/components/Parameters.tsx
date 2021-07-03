@@ -1,6 +1,7 @@
-import { Collapse, createStyles, List, ListItem, ListItemText, makeStyles, Slider } from "@material-ui/core";
+import { Collapse, createStyles, FormControlLabel, List, ListItem, ListItemText, makeStyles, RadioGroup, Slider, Radio } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
+import { DitherMethodPreset } from "../image/dither";
 import SidebarPaper from "./SidebarPaper";
 
 const useStyles = makeStyles(theme => createStyles({
@@ -14,6 +15,8 @@ export interface ParametersProps {
   onSizeChange: (newValue: number) => void;
   colorCount: number,
   onColorCountChange: (newValue: number) => void;
+  dither: DitherMethodPreset,
+  onDitherChange: (newValue: DitherMethodPreset) => void;
 }
 
 function ParameterText(props: { children?: React.ReactNode }) {
@@ -62,6 +65,14 @@ export default function Parameters(props: ParametersProps) {
               marks={[{ value: 16 }, { value: 32 }, { value: 64 }]}
               onChange={(_e, newValue) => props.onColorCountChange(newValue as number)}
             />
+          </ListItem>
+          <ListItem className={styles.parameter}>
+            <ParameterText>Dither Method</ParameterText>
+            <RadioGroup value={props.dither} onChange={(_e, newValue) => props.onDitherChange(newValue as DitherMethodPreset)}>
+              <FormControlLabel value="FloydSteinberg" control={<Radio />} label="Floyd-Steinberg" />
+              <FormControlLabel value="Aktinson" control={<Radio />} label="Aktinson" />
+              <FormControlLabel value="Eric" control={<Radio />} label="hackereric" />
+            </RadioGroup>
           </ListItem>
         </Collapse>
       </List>
