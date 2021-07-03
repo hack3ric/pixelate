@@ -4,19 +4,31 @@ import applyColor from "./apply-color";
 import { DitherMethod } from "./dither";
 import { medianCut } from "./median-cut";
 
-function apply(input: ImageData, scale: number, colors: number, dither: DitherMethod): ImageData {
+function apply(input: ImageData, size: number, colors: number, dither: DitherMethod): ImageData {
   console.log("I'm inside worker!");
-  const tw = Math.floor(input.width / scale);
-  const th = Math.floor(input.height / scale);
-  const resized = new ImageData(tw, th);
+  let resized;
+  if (input.width > input.height) {
+    resized = new ImageData(size, Math.trunc(size / input.width * input.height));
+  } else {
+    resized = new ImageData(size, Math.trunc(size / input.height * input.width));
+  }
+  const t1 = performance.now();
   resize(input, resized);
+  const t2 = performance.now();
   const palette = medianCut(resized.data, colors);
+  const t3 = performance.now();
+
   console.log(palette);
   for (let color of palette) {
     console.log("%c          ", `background: rgb(${color[0]}, ${color[1]}, ${color[2]})`)
   }
+
+  const t4 = performance.now();
   applyColor(resized, palette, dither);
-  // TODO
+  const t5 = performance.now();
+  
+  console.log(`Resize: ${t2 - t1}ms\nMedian Cut: ${t3 - t2}ms\nApply: ${t5 - t4}ms`);
+
   return resized;
 }
 

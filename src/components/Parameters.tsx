@@ -9,7 +9,14 @@ const useStyles = makeStyles(theme => createStyles({
   }
 }));
 
-export default function Parameters() {
+export interface ParametersProps {
+  size: number;
+  onSizeChange: (newValue: number) => void;
+  colorCount: number,
+  onColorCountChange: (newValue: number) => void;
+}
+
+export default function Parameters(props: ParametersProps) {
   const styles = useStyles();
   const [open, setOpen] = useState(true);
 
@@ -23,17 +30,33 @@ export default function Parameters() {
         <Collapse in={open}>
           <ListItem className={styles.parameter}>
             <ListItemText
-              primary="Scale"
+              primary="Image Size"
               primaryTypographyProps={{ variant: "body2", color: "textSecondary" }}
             />
-            <Slider color="secondary" />
+            <Slider
+              color="secondary"
+              value={props.size}
+              min={256}
+              max={1024}
+              step={128}
+              valueLabelDisplay="auto"
+              onChange={(_e, newValue) => props.onSizeChange(newValue as number)}
+            />
           </ListItem>
           <ListItem className={styles.parameter}>
             <ListItemText
               primary="Colours"
               primaryTypographyProps={{ variant: "body2", color: "textSecondary" }}
             />
-            <Slider color="secondary" />
+            <Slider
+              color="secondary"
+              value={props.colorCount}
+              min={8}
+              max={64}
+              step={8}
+              valueLabelDisplay="auto"
+              onChange={(_e, newValue) => props.onColorCountChange(newValue as number)}
+            />
           </ListItem>
         </Collapse>
       </List>

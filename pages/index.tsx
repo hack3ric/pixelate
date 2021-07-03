@@ -30,14 +30,14 @@ const useStyles = makeStyles(theme => createStyles({
   },
   drawer: {
     width: drawerWidth,
+    maxWidth: "100%",
     background: "transparent",
     border: "none",
     padding: 16,
+    boxShadow: "none",
     [theme.breakpoints.up("md")]: {
       paddingLeft: 0,
-    },
-    maxWidth: "100%",
-    boxShadow: "none"
+    }
   },
   expandDrawerButton: {
     position: "absolute",
@@ -56,10 +56,13 @@ export default function App() {
   const [outputData, setOutputData] = useState<ImageData | undefined>();
   const [mobileOpenDrawer, setMobileOpenDrawer] = useState(false);
 
+  const [size, setSize] = useState(512);
+  const [colorCount, setColorCount] = useState(24);
+
   useEffect(() => {
     const worker = new Worker(new URL("../src/image/worker.ts", import.meta.url), { type: "module" });
     imageWorker.current = Comlink.wrap<ImageWorkerApi>(worker);
-    return worker.terminate;
+    return () => worker.terminate();
   }, []);
 
   async function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -77,7 +80,7 @@ export default function App() {
     if (!inputData || !imageWorker.current) {
       return;
     }
-    const output = await imageWorker.current.apply(inputData, 16, 24, DitherMethods.FloydSteinberg);
+    const output = await imageWorker.current.apply(inputData, size, colorCount, DitherMethods.FloydSteinberg);
     console.log(output);
     setOutputData(output);
   }
@@ -101,7 +104,10 @@ export default function App() {
       </Button>
       <Button color="secondary" onClick={handleApply}>Apply</Button>
     </SidebarPaper>
-    <Parameters />
+    <Parameters
+      size={size} onSizeChange={setSize}
+      colorCount={colorCount} onColorCountChange={setColorCount}
+    />
   </>;
 
   return (
