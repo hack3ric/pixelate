@@ -10,7 +10,7 @@ function apply(input: ImageData, size: number, colors: number, dither: DitherMet
   if (input.width > input.height) {
     resized = new ImageData(size, Math.trunc(size / input.width * input.height));
   } else {
-    resized = new ImageData(size, Math.trunc(size / input.height * input.width));
+    resized = new ImageData(Math.trunc(size / input.height * input.width), size);
   }
   const t1 = performance.now();
   resize(input, resized);
