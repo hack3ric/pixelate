@@ -27,12 +27,25 @@ export default function Canvas({ image, fetchImageData }: CanvasProps) {
       throw new Error("Canvas not ready");
     }
 
-    canvas.width = image.width;
-    canvas.height = image.height;
+    const w = image.width;
+    const h = image.height;
+
+    if (w > 4096 || h > 4096) {
+      if (w > h) {
+        canvas.width = 4096;
+        canvas.height = 4096 / w * h;
+      } else {
+        canvas.width = 4096 / h * w;
+        canvas.height = 4096;
+      }
+    } else {
+      canvas.width = w;
+      canvas.height = h;
+    }
 
     if (image instanceof HTMLImageElement) {
-      context.drawImage(image, 0, 0);
-      const data = context.getImageData(0, 0, image.width, image.height);
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      const data = context.getImageData(0, 0, canvas.width, canvas.height);
       fetchImageData(data);
     } else {
       context.putImageData(image, 0, 0);
