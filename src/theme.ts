@@ -1,9 +1,15 @@
 import { createMuiTheme, Theme } from '@material-ui/core/styles';
 
 export default function makeTheme(prefersDarkMode: boolean): Theme {
+  const type = prefersDarkMode ? "dark" : "light";
+
   return createMuiTheme({
     palette: {
-      type: prefersDarkMode ? "dark" : "light"
+      type,
+      background: {
+        default: type === "dark" ? "#101010" : "#fafafa",
+        paper: type === "dark" ? "#202020" : "#fff"
+      }
     },
     overrides: {
       MuiCssBaseline: {
