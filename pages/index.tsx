@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => createStyles({
     width: `calc(100% - ${drawerWidth}px)`,
     height: "100%",
     padding: 24,
+    paddingRight: 8,
     [theme.breakpoints.down("sm")]: {
       width: "100%",
       padding: 8
@@ -34,20 +35,12 @@ const useStyles = makeStyles(theme => createStyles({
     background: "transparent",
     border: "none",
     padding: 16,
-    boxShadow: "none",
-    [theme.breakpoints.up("md")]: {
-      paddingLeft: 0
-    }
+    boxShadow: "none"
   },
   expandDrawerButton: {
     position: "absolute",
     top: 8,
     right: 8
-  },
-  snackbarContent: {
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.text.primary,
-    fontSize: "1rem"
   }
 }));
 
@@ -111,7 +104,7 @@ export default function App() {
         Load Image
         <input type="file" accept="image/*" hidden onChange={handleInputChange} />
       </Button>
-      <Button color="secondary" onClick={handleApply}>Apply</Button>
+      <Button color="secondary" onClick={handleApply} disabled={generating}>Apply</Button>
     </SidebarPaper>
     <Parameters
       size={size} onSizeChange={setSize}
@@ -164,7 +157,6 @@ export default function App() {
 
       <Snackbar
         open={generating}
-        ContentProps={{ className: styles.snackbarContent }}
         message="Generating"
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         action={<CircularProgress color="secondary" size="1rem" style={{ marginRight: 8 }} />}

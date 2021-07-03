@@ -16,6 +16,15 @@ export interface ParametersProps {
   onColorCountChange: (newValue: number) => void;
 }
 
+function ParameterText(props: { children?: React.ReactNode }) {
+  return (
+    <ListItemText
+      primary={props.children}
+      primaryTypographyProps={{ variant: "body2", color: "textSecondary" }}
+    />
+  );
+}
+
 export default function Parameters(props: ParametersProps) {
   const styles = useStyles();
   const [open, setOpen] = useState(true);
@@ -29,10 +38,7 @@ export default function Parameters(props: ParametersProps) {
         </ListItem>
         <Collapse in={open}>
           <ListItem className={styles.parameter}>
-            <ListItemText
-              primary="Image Size"
-              primaryTypographyProps={{ variant: "body2", color: "textSecondary" }}
-            />
+            <ParameterText>Image Size</ParameterText>
             <Slider
               color="secondary"
               value={props.size}
@@ -45,10 +51,7 @@ export default function Parameters(props: ParametersProps) {
             />
           </ListItem>
           <ListItem className={styles.parameter}>
-            <ListItemText
-              primary="Colours"
-              primaryTypographyProps={{ variant: "body2", color: "textSecondary" }}
-            />
+            <ParameterText>Colour Count</ParameterText>
             <Slider
               color="secondary"
               value={props.colorCount}

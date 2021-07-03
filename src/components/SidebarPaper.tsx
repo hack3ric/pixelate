@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme => createStyles({
     boxShadow: "none",
     margin: "8px 0",
     [theme.breakpoints.down("sm")]: {
-      boxShadow: theme.shadows[2],
+      boxShadow: theme.shadows[3],
       border: theme.palette.type === "light" ? "1px solid white" : undefined
     }
   }
