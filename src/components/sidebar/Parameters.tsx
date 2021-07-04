@@ -10,11 +10,11 @@ export interface ParametersProps {
   size: number;
   paletteType: PaletteType,
   colorCount: number,
-  dither: DitherMethod,
+  ditherMethod: DitherMethod,
   onSizeChange: (v: number) => void;
   onPaletteTypeChange: (v: PaletteType) => void;
   onColorCountChange: (v: number) => void;
-  onDitherChange: (v: DitherMethod) => void;
+  onDitherMethodChange: (v: DitherMethod) => void;
 }
 
 function marks(...m: number[]): { value: number }[] {
@@ -68,11 +68,11 @@ export default function Parameters(props: ParametersProps) {
           </ListItem>
           <ListItem className={styles.parameter}>
             <ParameterText>Dither Method</ParameterText>
-            <RadioGroup value={props.dither} onChange={(_e, v) => props.onDitherChange(v as DitherMethod)}>
-              <FormControlLabel value="FloydSteinberg" control={<Radio />} label="Floyd-Steinberg" />
-              <FormControlLabel value="Aktinson" control={<Radio />} label="Aktinson" />
-              <FormControlLabel value="Eric" control={<Radio />} label="hackereric" />
-              <FormControlLabel value="None" control={<Radio />} label="None" />
+            <RadioGroup value={props.ditherMethod} onChange={(_e, v) => props.onDitherMethodChange(v as DitherMethod)}>
+              <FormControlLabel value="floyd-steinberg" control={<Radio />} label="Floyd-Steinberg" />
+              <FormControlLabel value="aktinson" control={<Radio />} label="Aktinson" />
+              <FormControlLabel value="eric" control={<Radio />} label="hackereric" />
+              <FormControlLabel value="none" control={<Radio />} label="None" />
             </RadioGroup>
           </ListItem>
         </Collapse>

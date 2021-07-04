@@ -6,13 +6,13 @@ import { ChevronLeft } from "@material-ui/icons";
 import Welcome from "./Welcome";
 import { ImageWorkerApi } from "../image/image.worker";
 import * as Comlink from "comlink";
-import * as DitherMethods from "../image/dither";
 import SidebarPaper from "./sidebar/SidebarPaper";
 import Head from "next/head";
 import Parameters from "./sidebar/Parameters";
-import { DitherMethod } from "../image/dither";
+import { DitherMethod, ditherMethods } from "../image/dither";
 import Export from "./sidebar/Export";
 import { PaletteType } from "../image/palette";
+import useLocalStorage from "../use-local-storage";
 
 const drawerWidth = 340;
 
@@ -60,11 +60,11 @@ export default function App() {
   const [generating, setGenerating] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
 
-  const [size, setSize] = useState(512);
-  const [colorCount, setColorCount] = useState(24);
-  const [paletteType, setPaletteType] = useState<PaletteType>("median-cut-variance");
-  const [dither, setDither] = useState<DitherMethod>("Eric");
-  const [pixelScale, setPixelScale] = useState(4);
+  const [size, setSize] = useLocalStorage("size", 512);
+  const [colorCount, setColorCount] = useLocalStorage("colorCount", 24);
+  const [paletteType, setPaletteType] = useLocalStorage<PaletteType>("paletteType", "median-cut-variance");
+  const [ditherMethod, setDitherMethod] = useLocalStorage<DitherMethod>("ditherMethod", "eric");
+  const [pixelScale, setPixelScale] = useLocalStorage("pixelScale", 4);
 
   useEffect(() => {
     const worker = new Worker(
@@ -91,7 +91,7 @@ export default function App() {
       inputData,
       size,
       colorCount,
-      DitherMethods[dither],
+      ditherMethods[ditherMethod],
       paletteType
     );
     setOutputData(output);
@@ -121,7 +121,7 @@ export default function App() {
       size={size} onSizeChange={setSize}
       colorCount={colorCount} onColorCountChange={setColorCount}
       paletteType={paletteType} onPaletteTypeChange={setPaletteType}
-      dither={dither} onDitherChange={setDither}
+      ditherMethod={ditherMethod} onDitherMethodChange={setDitherMethod}
     />
     <Export
       imageWorker={imageWorker}
