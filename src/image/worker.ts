@@ -13,24 +13,20 @@ function apply(input: ImageData, size: number, colors: number, dither: DitherMet
   } else {
     resized = new ImageData(Math.trunc(size / input.height * input.width), size);
   }
-  const t1 = performance.now();
-  resize(input, resized);
-  const t2 = performance.now();
-  medianCut2(resized.data);
-  const palette = medianCut(resized.data, colors);
-  const t3 = performance.now();
 
-  console.log(palette);
+  resize(input, resized);
+  console.time("medianCut");
+  medianCut(resized.data, colors);
+  console.timeEnd("medianCut");
+  console.time("medianCut2");
+  const palette = medianCut2(resized.data, colors);
+  console.timeEnd("medianCut2");
+
   for (let color of palette) {
     console.log("%c          ", `background: rgb(${color[0]}, ${color[1]}, ${color[2]})`)
   }
 
-  const t4 = performance.now();
   applyColor(resized, palette, dither);
-  const t5 = performance.now();
-  
-  console.log(`Resize: ${t2 - t1}ms\nMedian Cut: ${t3 - t2}ms\nApply: ${t5 - t4}ms`);
-
   return resized;
 }
 

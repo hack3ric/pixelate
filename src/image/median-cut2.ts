@@ -1,19 +1,20 @@
-export default function medianCut2(data: Uint8ClampedArray) {
+export default function medianCut2(data: Uint8ClampedArray, colors: number): Uint8ClampedArray[] {
   const pixels = [];
   for (let i = 0; i < data.length; i += 4) {
     pixels.push(data.slice(i, i + 3));
   }
-  const vbox = new Vbox(pixels);
-  console.log(vbox.dimensions.slice(0), vbox.pixels.length);
-  const newVbox = vbox.splitOff();
-  console.log(vbox.dimensions, vbox.pixels.length, newVbox.dimensions.slice(0), newVbox.pixels.length);
-  const newNewVbox = newVbox.splitOff();
-  console.log(newVbox.dimensions, newVbox.pixels.length, newNewVbox.dimensions, newNewVbox.pixels.length);
+  const buckets = [new Bucket(pixels)];
+  for (let i = 0; i < colors - 1; i++) {
+    const bucketToSplit = buckets.reduce((a, c) => c.dimensions[c.channelToSplit] > a.dimensions[a.channelToSplit] ? c : a);
+    buckets.push(bucketToSplit.splitOff());
+  }
+  return buckets.map(v => v.mean());
 }
 
-class Vbox {
+class Bucket {
   pixels: Uint8ClampedArray[];
-  dimensions: Uint8ClampedArray = new Uint8ClampedArray(3);
+  dimensions = new Uint8ClampedArray(3);
+  channelToSplit = -1;
 
   constructor(pixels: Uint8ClampedArray[]) {
     this.pixels = pixels;
@@ -21,17 +22,34 @@ class Vbox {
   }
 
   calculate() {
+    const x = this.pixels.reduce((a, c) => {
+      for (let j = 0; j < 3; j++) {
+        a[j] = Math.min(a[j], c[j]);
+        a[3 + j] = Math.max(a[3 + j], c[j]);
+      }
+      return a;
+    }, [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity]);
     for (let j = 0; j < 3; j++) {
-      const [min, max] = this.pixels.reduce((a, c) => [Math.min(a[0], c[j]), Math.max(a[1], c[j])], [Infinity, -Infinity]);
-      this.dimensions[j] = max - min;
+      this.dimensions[j] = x[3 + j] - x[j];
     }
+    [, this.channelToSplit] = this.dimensions.reduce((a, c, i) => c > a[0] ? [c, i] : a, [-1, -1]);
   }
 
-  splitOff(): Vbox {
-    const [_maxDimension, maxChannel] = this.dimensions.reduce((a, c, i) => c > a[0] ? [c, i] : a, [-1, -1]);
-    this.pixels.sort((a, b) => a[maxChannel] - b[maxChannel]);
-    const newVbox = new Vbox(this.pixels.splice(Math.floor(this.pixels.length / 2)));
+  splitOff(): Bucket {
+    this.pixels.sort((a, b) => a[this.channelToSplit] - b[this.channelToSplit]);
+    const newVbox = new Bucket(this.pixels.splice(Math.floor(this.pixels.length / 2)));
     this.calculate();
     return newVbox;
+  }
+
+  mean(): Uint8ClampedArray {
+    return new Uint8ClampedArray(this.pixels
+      .reduce((a, c) => {
+        for (let j = 0; j < 3; j++) {
+          a[j] += c[j];
+        }
+        return a;
+      }, new Uint32Array(3))
+      .map(v => v / this.pixels.length));
   }
 }
