@@ -47,7 +47,7 @@ export default function Parameters(props: ParametersProps) {
             />
           </ListItem>
           <ListItem className={styles.parameter}>
-            <ParameterText>Palette Generating Method</ParameterText>
+            <ParameterText>Palette Type</ParameterText>
             <RadioGroup value={props.paletteType} onChange={(_e, v) => props.onPaletteTypeChange(v as PaletteType)}>
               <FormControlLabel value="median-cut-variance" control={<Radio />} label="Median Cut (Variance)" />
               <FormControlLabel value="median-cut-range" control={<Radio />} label="Median Cut (Range)" />

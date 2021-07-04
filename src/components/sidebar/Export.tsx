@@ -1,4 +1,4 @@
-import { Collapse, List, ListItem, ListItemText, Typography, Slider } from "@material-ui/core";
+import { Collapse, List, ListItem, ListItemText, Typography, Slider, Button } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
 import SidebarPaper from "./SidebarPaper";
@@ -63,8 +63,9 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
               onChange={(_e, newValue) => onPixelScaleChange(newValue as number)}
             />
           </ListItem>
-          <ListItem dense disabled={!outputData} button onClick={handleExport}>
-            <ListItemText primary="Export" primaryTypographyProps={{ variant: "button" }} />
+          <ListItem dense style={{ paddingLeft: 8 }}>
+            <Button disabled={!outputData} color="secondary" onClick={handleExport}>Export</Button>
+            <div style={{ flexGrow: 1 }}></div>
             <Typography variant="body2" color="textSecondary">
               {outputData
                 ? `${outputData.width * pixelScale}x${outputData.height * pixelScale}`
