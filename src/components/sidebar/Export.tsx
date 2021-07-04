@@ -55,10 +55,11 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
             <Slider
               color="secondary"
               min={1}
-              max={4}
+              max={8}
               step={1}
               valueLabelDisplay="auto"
               value={pixelScale}
+              marks
               onChange={(_e, newValue) => onPixelScaleChange(newValue as number)}
             />
           </ListItem>

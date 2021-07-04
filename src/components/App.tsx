@@ -60,7 +60,7 @@ export default function App() {
   const [size, setSize] = useState(512);
   const [colorCount, setColorCount] = useState(24);
   const [dither, setDither] = useState<DitherMethodPreset>("Eric");
-  const [pixelScale, setPixelScale] = useState(1);
+  const [pixelScale, setPixelScale] = useState(4);
 
   useEffect(() => {
     const worker = new Worker(new URL("../image/worker.ts", import.meta.url), { type: "module" });

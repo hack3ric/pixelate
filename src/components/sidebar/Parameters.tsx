@@ -14,6 +14,10 @@ export interface ParametersProps {
   onDitherChange: (newValue: DitherMethodPreset) => void;
 }
 
+function marks(...m: number[]): { value: number }[] {
+  return m.map(i => ({ value: i }));
+}
+
 export default function Parameters(props: ParametersProps) {
   const styles = useSidebarStyles();
   const [open, setOpen] = useState(true);
@@ -35,7 +39,7 @@ export default function Parameters(props: ParametersProps) {
               max={1024}
               step={64}
               valueLabelDisplay="auto"
-              marks={[{ value: 256 }, { value: 512 }, { value: 1024 }]}
+              marks={marks(128, 256, 384, 512, 640, 768, 896, 1024)}
               onChange={(_e, newValue) => props.onSizeChange(newValue as number)}
             />
           </ListItem>
@@ -48,7 +52,8 @@ export default function Parameters(props: ParametersProps) {
               max={64}
               step={4}
               valueLabelDisplay="auto"
-              marks={[{ value: 16 }, { value: 32 }, { value: 64 }]}
+              marks={marks(8, 16, 24, 32, 40, 48, 56, 64)}
+              // marks
               onChange={(_e, newValue) => props.onColorCountChange(newValue as number)}
             />
           </ListItem>
