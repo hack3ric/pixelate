@@ -1,10 +1,11 @@
 import * as Comlink from "comlink";
 import { resize } from ".";
 import applyColor from "./apply-color";
-import { DitherMethod } from "./dither";
-import medianCut from "./median-cut";
+import { Dither } from "./dither";
+import { PaletteType } from "./palette";
+import medianCut from "./palette/median-cut";
 
-function apply(input: ImageData, size: number, colors: number, dither: DitherMethod): ImageData {
+function run(input: ImageData, size: number, colors: number, dither: Dither, paletteType: PaletteType): ImageData {
   console.log("I'm inside worker!");
   let resized;
   if (input.width > input.height) {
@@ -12,11 +13,17 @@ function apply(input: ImageData, size: number, colors: number, dither: DitherMet
   } else {
     resized = new ImageData(Math.trunc(size / input.height * input.width), size);
   }
-
   resize(input, resized);
-  console.time("medianCut");
-  const palette = medianCut(resized.data, colors, "variance");
-  console.timeEnd("medianCut");
+
+  let palette;
+  switch (paletteType) {
+    case "median-cut-variance":
+      palette = medianCut(resized.data, colors, "variance");
+      break;
+    case "median-cut-range":
+      palette = medianCut(resized.data, colors, "range");
+      break;
+  }
 
   for (let color of palette) {
     console.log("%c          ", `background: rgb(${color[0]}, ${color[1]}, ${color[2]})`)
@@ -33,10 +40,10 @@ function scale(input: ImageData, scale: number): ImageData {
 }
 
 export interface ImageWorkerApi {
-  apply: typeof apply;
+  run: typeof run;
   scale: typeof scale;
 }
 
-const api: ImageWorkerApi = { apply, scale };
+const api: ImageWorkerApi = { run, scale };
 
 Comlink.expose(api);
