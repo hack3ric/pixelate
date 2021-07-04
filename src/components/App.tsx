@@ -4,7 +4,7 @@ import { getImageFromFile } from "../image";
 import Canvas from "./Canvas";
 import { ChevronLeft } from "@material-ui/icons";
 import Welcome from "./Welcome";
-import { ImageWorkerApi } from "../image/worker";
+import { ImageWorkerApi } from "../image/image.worker";
 import * as Comlink from "comlink";
 import * as DitherMethods from "../image/dither";
 import SidebarPaper from "./sidebar/SidebarPaper";
@@ -66,7 +66,7 @@ export default function App() {
   const [pixelScale, setPixelScale] = useState(4);
 
   useEffect(() => {
-    const worker = new Worker(new URL("../image/worker.ts", import.meta.url), { type: "module" });
+    const worker = new Worker(new URL("../image/image.worker.ts", import.meta.url), { type: "module" });
     imageWorker.current = Comlink.wrap<ImageWorkerApi>(worker);
     return () => worker.terminate();
   }, []);
