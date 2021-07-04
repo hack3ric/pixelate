@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import SidebarPaper from "./SidebarPaper";
 import { useSidebarStyles, ParameterText } from "./common";
 import * as Comlink from "comlink";
-import { ImageWorkerApi } from "../../image/worker";
+import { ImageWorkerApi } from "../../image/image.worker";
 
 export interface ExportProps {
   imageWorker: React.MutableRefObject<Comlink.Remote<ImageWorkerApi> | undefined>;

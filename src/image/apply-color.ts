@@ -1,7 +1,7 @@
 import { xyToI } from ".";
-import { DitherMethod } from "./dither";
+import { Dither } from "./dither";
 
-export default function applyColor(input: ImageData, palette: Uint8ClampedArray[], dither: DitherMethod) {
+export default function applyColor(input: ImageData, palette: Uint8ClampedArray[], dither: Dither) {
   for (let y = 0; y < input.height; y++) {
     for (let x = 0; x < input.width; x++) {
       const i = xyToI(x, y, input.width, input.height);

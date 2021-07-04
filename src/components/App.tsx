@@ -4,14 +4,15 @@ import { getImageFromFile } from "../image";
 import Canvas from "./Canvas";
 import { ChevronLeft } from "@material-ui/icons";
 import Welcome from "./Welcome";
-import { ImageWorkerApi } from "../image/worker";
+import { ImageWorkerApi } from "../image/image.worker";
 import * as Comlink from "comlink";
 import * as DitherMethods from "../image/dither";
 import SidebarPaper from "./sidebar/SidebarPaper";
 import Head from "next/head";
 import Parameters from "./sidebar/Parameters";
-import { DitherMethodPreset } from "../image/dither";
+import { DitherMethod } from "../image/dither";
 import Export from "./sidebar/Export";
+import { PaletteType } from "../image/palette";
 
 const drawerWidth = 340;
 
@@ -60,11 +61,12 @@ export default function App() {
 
   const [size, setSize] = useState(512);
   const [colorCount, setColorCount] = useState(24);
-  const [dither, setDither] = useState<DitherMethodPreset>("Eric");
+  const [paletteType, setPaletteType] = useState<PaletteType>("median-cut-variance");
+  const [dither, setDither] = useState<DitherMethod>("Eric");
   const [pixelScale, setPixelScale] = useState(4);
 
   useEffect(() => {
-    const worker = new Worker(new URL("../image/worker.ts", import.meta.url), { type: "module" });
+    const worker = new Worker(new URL("../image/image.worker.ts", import.meta.url), { type: "module" });
     imageWorker.current = Comlink.wrap<ImageWorkerApi>(worker);
     return () => worker.terminate();
   }, []);
@@ -86,8 +88,13 @@ export default function App() {
     }
 
     setGenerating(true);
-    const output = await imageWorker.current.apply(inputData, size, colorCount, DitherMethods[dither]);
-    console.log(output);
+    const output = await imageWorker.current.run(
+      inputData,
+      size,
+      colorCount,
+      DitherMethods[dither],
+      paletteType
+    );
     setOutputData(output);
     setGenerating(false);
   }
@@ -114,6 +121,7 @@ export default function App() {
     <Parameters
       size={size} onSizeChange={setSize}
       colorCount={colorCount} onColorCountChange={setColorCount}
+      paletteType={paletteType} onPaletteTypeChange={setPaletteType}
       dither={dither} onDitherChange={setDither}
     />
     <Export
@@ -130,7 +138,6 @@ export default function App() {
       <Head>
         <title>{filename ? `${filename} - Pixelate` : "Pixelate"}</title>
       </Head>
-
       <main className={styles.main}>
         {image ? <Canvas
           image={outputData && !showOriginal ? outputData : image}
@@ -139,7 +146,6 @@ export default function App() {
           onMouseUp={() => setShowOriginal(false)}
         /> : <Welcome />}
       </main>
-
       <Hidden smDown>
         <Drawer
           variant="permanent"
@@ -169,7 +175,6 @@ export default function App() {
           {drawerContent}
         </Drawer>
       </Hidden>
-
       <Snackbar
         open={generating}
         message="Generating"
