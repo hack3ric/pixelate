@@ -56,6 +56,7 @@ export default function App() {
   const [outputData, setOutputData] = useState<ImageData | undefined>();
   const [mobileOpenDrawer, setMobileOpenDrawer] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [showOriginal, setShowOriginal] = useState(false);
 
   const [size, setSize] = useState(512);
   const [colorCount, setColorCount] = useState(24);
@@ -132,8 +133,10 @@ export default function App() {
 
       <main className={styles.main}>
         {image ? <Canvas
-          image={outputData ?? image}
-          fetchImageData={setInputData}
+          image={outputData && !showOriginal ? outputData : image}
+          fetchImageData={showOriginal ? undefined : setInputData}
+          onMouseDown={() => setShowOriginal(true)}
+          onMouseUp={() => setShowOriginal(false)}
         /> : <Welcome />}
       </main>
 
