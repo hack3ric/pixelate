@@ -2,8 +2,7 @@ import * as Comlink from "comlink";
 import { resize } from ".";
 import applyColor from "./apply-color";
 import { DitherMethod } from "./dither";
-import { medianCut } from "./median-cut";
-import medianCut2 from "./median-cut2";
+import medianCut from "./median-cut";
 
 function apply(input: ImageData, size: number, colors: number, dither: DitherMethod): ImageData {
   console.log("I'm inside worker!");
@@ -16,11 +15,8 @@ function apply(input: ImageData, size: number, colors: number, dither: DitherMet
 
   resize(input, resized);
   console.time("medianCut");
-  medianCut(resized.data, colors);
+  const palette = medianCut(resized.data, colors, "variance");
   console.timeEnd("medianCut");
-  console.time("medianCut2");
-  const palette = medianCut2(resized.data, colors);
-  console.timeEnd("medianCut2");
 
   for (let color of palette) {
     console.log("%c          ", `background: rgb(${color[0]}, ${color[1]}, ${color[2]})`)
