@@ -11,6 +11,11 @@ export default function makeTheme(prefersDarkMode: boolean): Theme {
         paper: type === "dark" ? "#202020" : "#fff"
       }
     },
+    typography: {
+      fontFamily: "Rubik, -apple-system, BlinkMacSystemFont, " +
+        "'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', " +
+        "'Helvetica Neue', sans-serif"
+    },
     overrides: {
       MuiCssBaseline: {
         "@global": {
