@@ -3,6 +3,7 @@ import { resize } from ".";
 import applyColor from "./apply-color";
 import { DitherMethod } from "./dither";
 import { medianCut } from "./median-cut";
+import medianCut2 from "./median-cut2";
 
 function apply(input: ImageData, size: number, colors: number, dither: DitherMethod): ImageData {
   console.log("I'm inside worker!");
@@ -15,6 +16,7 @@ function apply(input: ImageData, size: number, colors: number, dither: DitherMet
   const t1 = performance.now();
   resize(input, resized);
   const t2 = performance.now();
+  medianCut2(resized.data);
   const palette = medianCut(resized.data, colors);
   const t3 = performance.now();
 
