@@ -58,6 +58,7 @@ export default function Parameters(props: ParametersProps) {
               <FormControlLabel value="FloydSteinberg" control={<Radio />} label="Floyd-Steinberg" />
               <FormControlLabel value="Aktinson" control={<Radio />} label="Aktinson" />
               <FormControlLabel value="Eric" control={<Radio />} label="hackereric" />
+              <FormControlLabel value="None" control={<Radio />} label="None" />
             </RadioGroup>
           </ListItem>
         </Collapse>
