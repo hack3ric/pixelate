@@ -55,6 +55,7 @@ export default function App() {
   const [image, setImage] = useState<HTMLImageElement | undefined>();
   const [inputData, setInputData] = useState<ImageData | undefined>();
   const [outputData, setOutputData] = useState<ImageData | undefined>();
+
   const [mobileOpenDrawer, setMobileOpenDrawer] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
@@ -66,15 +67,16 @@ export default function App() {
   const [pixelScale, setPixelScale] = useState(4);
 
   useEffect(() => {
-    const worker = new Worker(new URL("../image/image.worker.ts", import.meta.url), { type: "module" });
+    const worker = new Worker(
+      new URL("../image/image.worker.ts", import.meta.url),
+      { type: "module" }
+    );
     imageWorker.current = Comlink.wrap<ImageWorkerApi>(worker);
     return () => worker.terminate();
   }, []);
 
   async function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    if (!event.target.files || !event.target.files[0]) {
-      return;
-    }
+    if (!event.target.files || !event.target.files[0]) return;
     const file = event.target.files[0];
     setFilename(file.name);
     setImage(await getImageFromFile(file));
@@ -83,10 +85,7 @@ export default function App() {
   }
 
   async function handleApply() {
-    if (!inputData || !imageWorker.current || generating) {
-      return;
-    }
-
+    if (!inputData || !imageWorker.current || generating) return;
     setGenerating(true);
     const output = await imageWorker.current.run(
       inputData,
@@ -139,12 +138,14 @@ export default function App() {
         <title>{filename ? `${filename} - Pixelate` : "Pixelate"}</title>
       </Head>
       <main className={styles.main}>
-        {image ? <Canvas
-          image={outputData && !showOriginal ? outputData : image}
-          fetchImageData={showOriginal ? undefined : setInputData}
-          onMouseDown={() => setShowOriginal(true)}
-          onMouseUp={() => setShowOriginal(false)}
-        /> : <Welcome />}
+        {image
+          ? <Canvas
+              image={outputData && !showOriginal ? outputData : image}
+              fetchImageData={showOriginal ? undefined : setInputData}
+              onMouseDown={() => setShowOriginal(true)}
+              onMouseUp={() => setShowOriginal(false)}
+            />
+          : <Welcome />}
       </main>
       <Hidden smDown>
         <Drawer
@@ -157,13 +158,15 @@ export default function App() {
         </Drawer>
       </Hidden>
       <Hidden mdUp>
-        {mobileOpenDrawer ? false : <Fab
-          className={styles.expandDrawerButton}
-          color="secondary"
-          onClick={handleDrawerToggle}
-        >
-          <ChevronLeft />
-        </Fab>}
+        {mobileOpenDrawer
+          ? false
+          : <Fab
+              className={styles.expandDrawerButton}
+              color="secondary"
+              onClick={handleDrawerToggle}
+            >
+              <ChevronLeft />
+            </Fab>}
         <Drawer
           variant="temporary"
           open={mobileOpenDrawer}

@@ -19,7 +19,7 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
   const [open, setOpen] = useState(true);
 
   async function handleExport() {
-    if (!outputData || !imageWorker.current) return;
+    if (!filename || !outputData || !imageWorker.current) return;
 
     const tw = outputData.width * pixelScale;
     const th = outputData.height * pixelScale;
@@ -35,7 +35,7 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
 
     const exportURL = canvas.toDataURL("image/png");
     const link = document.createElement("a");
-    link.download = `pixelated-${filename}`.replace(/\.[^/.]+$/, ".png");
+    link.download = filename.replace(/\.[^/.]+$/, "-pixelated.png");
     link.href = exportURL;
     document.body.appendChild(link);
     link.click();
@@ -60,7 +60,7 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
               valueLabelDisplay="auto"
               value={pixelScale}
               marks
-              onChange={(_e, newValue) => onPixelScaleChange(newValue as number)}
+              onChange={(_e, v) => onPixelScaleChange(v as number)}
             />
           </ListItem>
           <ListItem dense style={{ paddingLeft: 8 }}>
@@ -68,7 +68,7 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
             <div style={{ flexGrow: 1 }}></div>
             <Typography variant="body2" color="textSecondary">
               {outputData
-                ? `${outputData.width * pixelScale}x${outputData.height * pixelScale}`
+                ? `${outputData.width * pixelScale} x ${outputData.height * pixelScale}`
                 : `${pixelScale}x Pixelated Image Size`}
             </Typography>
           </ListItem>
