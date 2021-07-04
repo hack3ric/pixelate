@@ -7,10 +7,11 @@ import Welcome from "./Welcome";
 import { ImageWorkerApi } from "../image/worker";
 import * as Comlink from "comlink";
 import * as DitherMethods from "../image/dither";
-import SidebarPaper from "./SidebarPaper";
+import SidebarPaper from "./sidebar/SidebarPaper";
 import Head from "next/head";
-import Parameters from "./Parameters";
+import Parameters from "./sidebar/Parameters";
 import { DitherMethodPreset } from "../image/dither";
+import Export from "./sidebar/Export";
 
 const drawerWidth = 340;
 
@@ -59,6 +60,7 @@ export default function App() {
   const [size, setSize] = useState(512);
   const [colorCount, setColorCount] = useState(24);
   const [dither, setDither] = useState<DitherMethodPreset>("Eric");
+  const [pixelScale, setPixelScale] = useState(1);
 
   useEffect(() => {
     const worker = new Worker(new URL("../image/worker.ts", import.meta.url), { type: "module" });
@@ -106,12 +108,19 @@ export default function App() {
         Load Image
         <input type="file" accept="image/*" hidden onChange={handleInputChange} />
       </Button>
-      <Button color="secondary" onClick={handleApply} disabled={generating}>Apply</Button>
+      <Button color="secondary" onClick={handleApply} disabled={generating || !inputData}>Apply</Button>
     </SidebarPaper>
     <Parameters
       size={size} onSizeChange={setSize}
       colorCount={colorCount} onColorCountChange={setColorCount}
       dither={dither} onDitherChange={setDither}
+    />
+    <Export
+      imageWorker={imageWorker}
+      filename={filename}
+      outputData={outputData}
+      pixelScale={pixelScale}
+      onPixelScaleChange={setPixelScale}
     />
   </>;
 

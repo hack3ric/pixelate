@@ -32,12 +32,17 @@ function apply(input: ImageData, size: number, colors: number, dither: DitherMet
   return resized;
 }
 
-export interface ImageWorkerApi {
-  apply: typeof apply
+function scale(input: ImageData, scale: number): ImageData {
+  const output = new ImageData(input.width * scale, input.height * scale);
+  resize(input, output);
+  return output;
 }
 
-const api: ImageWorkerApi = {
-  apply
-};
+export interface ImageWorkerApi {
+  apply: typeof apply;
+  scale: typeof scale;
+}
+
+const api: ImageWorkerApi = { apply, scale };
 
 Comlink.expose(api);

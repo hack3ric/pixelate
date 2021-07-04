@@ -1,14 +1,9 @@
-import { Collapse, createStyles, FormControlLabel, List, ListItem, ListItemText, makeStyles, RadioGroup, Slider, Radio } from "@material-ui/core";
+import { Collapse, FormControlLabel, List, ListItem, ListItemText, RadioGroup, Slider, Radio } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
-import { DitherMethodPreset } from "../image/dither";
+import { DitherMethodPreset } from "../../image/dither";
+import { useSidebarStyles, ParameterText } from "./common";
 import SidebarPaper from "./SidebarPaper";
-
-const useStyles = makeStyles(theme => createStyles({
-  parameter: {
-    display: "block"
-  }
-}));
 
 export interface ParametersProps {
   size: number;
@@ -19,17 +14,8 @@ export interface ParametersProps {
   onDitherChange: (newValue: DitherMethodPreset) => void;
 }
 
-function ParameterText(props: { children?: React.ReactNode }) {
-  return (
-    <ListItemText
-      primary={props.children}
-      primaryTypographyProps={{ variant: "body2", color: "textSecondary" }}
-    />
-  );
-}
-
 export default function Parameters(props: ParametersProps) {
-  const styles = useStyles();
+  const styles = useSidebarStyles();
   const [open, setOpen] = useState(true);
 
   return (
