@@ -6,22 +6,21 @@ import { PaletteType } from "./palette";
 import medianCut from "./palette/median-cut";
 
 function run(input: ImageData, size: number, colors: number, dither: Dither, paletteType: PaletteType): ImageData {
-  console.log("I'm inside worker!");
-  let resized;
+  let output: ImageData;
   if (input.width > input.height) {
-    resized = new ImageData(size, Math.trunc(size / input.width * input.height));
+    output = new ImageData(size, Math.trunc(size / input.width * input.height));
   } else {
-    resized = new ImageData(Math.trunc(size / input.height * input.width), size);
+    output = new ImageData(Math.trunc(size / input.height * input.width), size);
   }
-  resize(input, resized);
+  resize(input, output);
 
-  let palette;
+  let palette: Uint8ClampedArray[];
   switch (paletteType) {
     case "median-cut-variance":
-      palette = medianCut(resized.data, colors, "variance");
+      palette = medianCut(output.data, colors, "variance");
       break;
     case "median-cut-range":
-      palette = medianCut(resized.data, colors, "range");
+      palette = medianCut(output.data, colors, "range");
       break;
   }
 
@@ -29,8 +28,8 @@ function run(input: ImageData, size: number, colors: number, dither: Dither, pal
     console.log("%c          ", `background: rgb(${color[0]}, ${color[1]}, ${color[2]})`)
   }
 
-  applyColor(resized, palette, dither);
-  return resized;
+  applyColor(output, palette, dither);
+  return output;
 }
 
 function scale(input: ImageData, scale: number): ImageData {

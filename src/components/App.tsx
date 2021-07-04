@@ -95,7 +95,6 @@ export default function App() {
       DitherMethods[dither],
       paletteType
     );
-    console.log(output);
     setOutputData(output);
     setGenerating(false);
   }
@@ -139,7 +138,6 @@ export default function App() {
       <Head>
         <title>{filename ? `${filename} - Pixelate` : "Pixelate"}</title>
       </Head>
-
       <main className={styles.main}>
         {image ? <Canvas
           image={outputData && !showOriginal ? outputData : image}
@@ -148,7 +146,6 @@ export default function App() {
           onMouseUp={() => setShowOriginal(false)}
         /> : <Welcome />}
       </main>
-
       <Hidden smDown>
         <Drawer
           variant="permanent"
@@ -178,7 +175,6 @@ export default function App() {
           {drawerContent}
         </Drawer>
       </Hidden>
-
       <Snackbar
         open={generating}
         message="Generating"

@@ -11,10 +11,10 @@ export interface ParametersProps {
   paletteType: PaletteType,
   colorCount: number,
   dither: DitherMethod,
-  onSizeChange: (newValue: number) => void;
-  onPaletteTypeChange: (newValue: PaletteType) => void;
-  onColorCountChange: (newValue: number) => void;
-  onDitherChange: (newValue: DitherMethod) => void;
+  onSizeChange: (v: number) => void;
+  onPaletteTypeChange: (v: PaletteType) => void;
+  onColorCountChange: (v: number) => void;
+  onDitherChange: (v: DitherMethod) => void;
 }
 
 function marks(...m: number[]): { value: number }[] {
@@ -43,12 +43,12 @@ export default function Parameters(props: ParametersProps) {
               step={64}
               valueLabelDisplay="auto"
               marks={marks(128, 256, 384, 512, 640, 768, 896, 1024)}
-              onChange={(_e, newValue) => props.onSizeChange(newValue as number)}
+              onChange={(_e, v) => props.onSizeChange(v as number)}
             />
           </ListItem>
           <ListItem className={styles.parameter}>
             <ParameterText>Palette Generating Method</ParameterText>
-            <RadioGroup value={props.paletteType} onChange={(_e, newValue) => props.onPaletteTypeChange(newValue as PaletteType)}>
+            <RadioGroup value={props.paletteType} onChange={(_e, v) => props.onPaletteTypeChange(v as PaletteType)}>
               <FormControlLabel value="median-cut-variance" control={<Radio />} label="Median Cut (Variance)" />
               <FormControlLabel value="median-cut-range" control={<Radio />} label="Median Cut (Range)" />
             </RadioGroup>
@@ -63,13 +63,12 @@ export default function Parameters(props: ParametersProps) {
               step={4}
               valueLabelDisplay="auto"
               marks={marks(8, 16, 24, 32, 40, 48, 56, 64)}
-              // marks
-              onChange={(_e, newValue) => props.onColorCountChange(newValue as number)}
+              onChange={(_e, v) => props.onColorCountChange(v as number)}
             />
           </ListItem>
           <ListItem className={styles.parameter}>
             <ParameterText>Dither Method</ParameterText>
-            <RadioGroup value={props.dither} onChange={(_e, newValue) => props.onDitherChange(newValue as DitherMethod)}>
+            <RadioGroup value={props.dither} onChange={(_e, v) => props.onDitherChange(v as DitherMethod)}>
               <FormControlLabel value="FloydSteinberg" control={<Radio />} label="Floyd-Steinberg" />
               <FormControlLabel value="Aktinson" control={<Radio />} label="Aktinson" />
               <FormControlLabel value="Eric" control={<Radio />} label="hackereric" />
