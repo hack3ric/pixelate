@@ -14,7 +14,7 @@ export const useSidebarStyles = makeStyles(theme => createStyles({
   parameter: {
     display: "block"
   }
-}));
+}), { index: 1 }); // prevent breaking styles in production
 
 export function ParameterText(props: { children?: React.ReactNode }) {
   return (
