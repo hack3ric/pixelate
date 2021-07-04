@@ -22,7 +22,8 @@ export default function makeTheme(prefersDarkMode: boolean): Theme {
           "html, body, #__next": {
             width: "100%",
             height: "100%",
-            overflow: "hidden"
+            overflow: "hidden",
+            userSelect: "none"
           }
         }
       },

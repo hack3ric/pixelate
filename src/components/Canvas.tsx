@@ -17,10 +17,12 @@ const useStyles = makeStyles(theme => createStyles({
 
 export interface CanvasProps {
   image: HTMLImageElement | ImageData;
-  fetchImageData: (data: ImageData) => any;
+  fetchImageData?: (data: ImageData) => any;
+  onMouseDown?: () => void;
+  onMouseUp?: () => void;
 }
 
-export default function Canvas({ image, fetchImageData }: CanvasProps) {
+export default function Canvas({ image, fetchImageData, onMouseDown, onMouseUp }: CanvasProps) {
   const styles = useStyles();
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -50,13 +52,20 @@ export default function Canvas({ image, fetchImageData }: CanvasProps) {
     if (image instanceof HTMLImageElement) {
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
       const data = context.getImageData(0, 0, canvas.width, canvas.height);
-      fetchImageData(data);
+      if (fetchImageData) fetchImageData(data);
     } else {
       context.putImageData(image, 0, 0);
     }
   }, [image]); // eslint-disable-line
 
   return (
-    <canvas ref={ref} className={`${styles.canvas} ${styles.crispEdges} ${styles.pixelated}`} />
+    <canvas
+      ref={ref}
+      className={`${styles.canvas} ${styles.crispEdges} ${styles.pixelated}`}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onTouchStart={onMouseDown} // HACK: Touch event <- Mouse Event
+      onTouchEnd={onMouseUp}
+    />
   )
 }
