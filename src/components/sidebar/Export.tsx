@@ -1,7 +1,7 @@
-import { Collapse, List, ListItem, ListItemText, Typography, Slider, Button } from "@material-ui/core";
-import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import { Collapse, List, ListItem, ListItemText, Typography, Button } from "@material-ui/core";
+import { ExpandLessRounded, ExpandMoreRounded } from "@material-ui/icons";
 import React, { useState } from "react";
-import { useSidebarStyles, ParameterText, SliderParameter, SidebarPaper } from "./common";
+import { useSidebarStyles, SliderParameter, SidebarPaper } from "./common";
 import * as Comlink from "comlink";
 import { ImageWorkerApi } from "../../image/image.worker";
 
@@ -46,7 +46,7 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
       <List disablePadding>
         <ListItem button onClick={() => setOpen(!open)}>
           <ListItemText primary="Export" />
-          {open ? <ExpandLess /> : <ExpandMore />}
+          {open ? <ExpandLessRounded /> : <ExpandMoreRounded />}
         </ListItem>
         <Collapse in={open}>
           <SliderParameter

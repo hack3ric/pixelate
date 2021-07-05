@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, CircularProgress, createStyles, Drawer, Fab, Hidden, makeStyles, Snackbar } from "@material-ui/core";
 import { getImageFromFile } from "../image";
 import Canvas from "./Canvas";
-import { ChevronLeft } from "@material-ui/icons";
+import { ChevronLeftRounded } from "@material-ui/icons";
 import Welcome from "./Welcome";
 import { ImageWorkerApi } from "../image/image.worker";
 import * as Comlink from "comlink";
@@ -165,6 +165,7 @@ export default function App() {
           onClose={handleDrawerToggle}
           classes={{ paper: styles.drawer }}
           anchor="right"
+          ModalProps={{ keepMounted: true }}
         >
           {drawerContent}
         </Drawer>
@@ -177,7 +178,7 @@ export default function App() {
               color="secondary"
               onClick={handleDrawerToggle}
             >
-              <ChevronLeft />
+              <ChevronLeftRounded />
             </Fab>}
       </Hidden>
       <Snackbar

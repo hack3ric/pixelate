@@ -1,9 +1,9 @@
-import { Collapse, FormControlLabel, List, ListItem, ListItemText, RadioGroup, Slider, Radio } from "@material-ui/core";
-import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import { Collapse, List, ListItem, ListItemText } from "@material-ui/core";
+import { ExpandLessRounded, ExpandMoreRounded } from "@material-ui/icons";
 import React, { useState } from "react";
 import { DitherMethod } from "../../image/dither";
 import { PaletteType } from "../../image/palette";
-import { useSidebarStyles, ParameterText, SliderParameter, SidebarPaper, RadioParameter } from "./common";
+import { useSidebarStyles, SliderParameter, SidebarPaper, RadioParameter } from "./common";
 
 export interface ParametersProps {
   size: number;
@@ -21,7 +21,6 @@ function marks(...m: number[]): { value: number }[] {
 }
 
 export default function Parameters(props: ParametersProps) {
-  const styles = useSidebarStyles();
   const [open, setOpen] = useState(true);
 
   return (
@@ -29,7 +28,7 @@ export default function Parameters(props: ParametersProps) {
       <List disablePadding>
         <ListItem button onClick={() => setOpen(!open)}>
           <ListItemText primary="Parameters" />
-          {open ? <ExpandLess /> : <ExpandMore />}
+          {open ? <ExpandLessRounded /> : <ExpandMoreRounded />}
         </ListItem>
         <Collapse in={open}>
           <SliderParameter
