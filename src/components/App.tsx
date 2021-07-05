@@ -147,7 +147,7 @@ export default function App() {
             />
           : <Welcome />}
       </main>
-      <Hidden smDown>
+      <Hidden smDown implementation="css">
         <Drawer
           variant="permanent"
           open
@@ -157,16 +157,7 @@ export default function App() {
           {drawerContent}
         </Drawer>
       </Hidden>
-      <Hidden mdUp>
-        {mobileOpenDrawer
-          ? false
-          : <Fab
-              className={styles.expandDrawerButton}
-              color="secondary"
-              onClick={handleDrawerToggle}
-            >
-              <ChevronLeft />
-            </Fab>}
+      <Hidden mdUp implementation="js">
         <Drawer
           variant="temporary"
           open={mobileOpenDrawer}
@@ -177,6 +168,17 @@ export default function App() {
         >
           {drawerContent}
         </Drawer>
+      </Hidden>
+      <Hidden mdUp implementation="css">
+        {mobileOpenDrawer
+          ? false
+          : <Fab
+              className={styles.expandDrawerButton}
+              color="secondary"
+              onClick={handleDrawerToggle}
+            >
+              <ChevronLeft />
+            </Fab>}
       </Hidden>
       <Snackbar
         open={generating}
