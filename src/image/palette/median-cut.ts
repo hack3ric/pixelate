@@ -35,7 +35,7 @@ class VarianceBucket {
     const varianceXLength = new Float32Array(3);
     for (let i = 0; i < this.pixels.length; i++) {
       for (let j = 0; j < 3; j++) {
-        varianceXLength[j] += Math.pow(this.pixels[i][j] - this.mean[j], 2);
+        varianceXLength[j] += (this.pixels[i][j] - this.mean[j]) ** 2;
       }
     }
     let maxVarianceXLength: number;
