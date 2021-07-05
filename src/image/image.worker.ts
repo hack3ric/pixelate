@@ -4,6 +4,7 @@ import applyColor from "./apply-color";
 import { Dither } from "./dither";
 import { PaletteType } from "./palette";
 import medianCut from "./palette/median-cut";
+import octree from "./palette/octree";
 
 function run(input: ImageData, size: number, colors: number, dither: Dither, paletteType: PaletteType): ImageData {
   let output: ImageData;
@@ -13,6 +14,8 @@ function run(input: ImageData, size: number, colors: number, dither: Dither, pal
     output = new ImageData(Math.trunc(size / input.height * input.width), size);
   }
   resize(input, output);
+
+  octree(input.data, 3);
 
   let palette: Uint8ClampedArray[];
   switch (paletteType) {
@@ -24,9 +27,9 @@ function run(input: ImageData, size: number, colors: number, dither: Dither, pal
       break;
   }
 
-  for (let color of palette) {
-    console.log("%c          ", `background: rgb(${color[0]}, ${color[1]}, ${color[2]})`)
-  }
+  // for (let color of palette) {
+  //   console.log("%c          ", `background: rgb(${color[0]}, ${color[1]}, ${color[2]})`)
+  // }
 
   applyColor(output, palette, dither);
   return output;
