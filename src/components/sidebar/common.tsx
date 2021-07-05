@@ -1,4 +1,4 @@
-import { makeStyles, createStyles, ListItemText, ListItem, Mark, Slider, Paper } from "@material-ui/core";
+import { makeStyles, createStyles, ListItemText, ListItem, Mark, Slider, Paper, RadioGroup, FormControlLabel, Radio } from "@material-ui/core";
 import React from "react";
 
 export const useSidebarStyles = makeStyles(theme => createStyles({
@@ -15,6 +15,25 @@ export const useSidebarStyles = makeStyles(theme => createStyles({
     display: "block"
   }
 }), { index: 1 }); // prevent breaking styles in production
+
+export interface SidebarPaperProps {
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
+}
+
+export function SidebarPaper({ children, style }: SidebarPaperProps) {
+  const styles = useSidebarStyles();
+
+  return (
+    <Paper
+      variant="outlined"
+      className={styles.paper}
+      style={style}
+    >
+      {children}
+    </Paper>
+  );
+}
 
 export function ParameterText(props: { children?: React.ReactNode }) {
   return (
@@ -54,21 +73,30 @@ export function SliderParameter(props: SliderParameterProps) {
   );
 }
 
-export interface SidebarPaperProps {
-  children?: React.ReactNode;
-  style?: React.CSSProperties;
+export interface RadioParameterProps<T extends string | number> {
+  text: string;
+  value: T;
+  onChange: (v: T) => void;
+  labels: { [key in T]?: string }
 }
 
-export function SidebarPaper({ children, style }: SidebarPaperProps) {
+export function RadioParameter<T extends string | number>(props: RadioParameterProps<T>) {
   const styles = useSidebarStyles();
 
   return (
-    <Paper
-      variant="outlined"
-      className={styles.paper}
-      style={style}
-    >
-      {children}
-    </Paper>
+    <ListItem className={styles.parameter}>
+      <ParameterText>{props.text}</ParameterText>
+      <RadioGroup value={props.value} onChange={(_e, v) => props.onChange(v as T)}>
+        {Object.keys(props.labels)
+          .map(i => (
+            <FormControlLabel
+              key={i}
+              value={i}
+              control={<Radio />}
+              label={props.labels[i as T]}
+            />
+          ))}
+      </RadioGroup>
+    </ListItem>
   );
 }

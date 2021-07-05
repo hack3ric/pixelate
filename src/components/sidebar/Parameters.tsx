@@ -3,7 +3,7 @@ import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
 import { DitherMethod } from "../../image/dither";
 import { PaletteType } from "../../image/palette";
-import { useSidebarStyles, ParameterText, SliderParameter, SidebarPaper } from "./common";
+import { useSidebarStyles, ParameterText, SliderParameter, SidebarPaper, RadioParameter } from "./common";
 
 export interface ParametersProps {
   size: number;
@@ -40,13 +40,15 @@ export default function Parameters(props: ParametersProps) {
             step={64}
             marks={marks(128, 256, 384, 512, 640, 768, 896, 1024)}
           />
-          <ListItem className={styles.parameter}>
-            <ParameterText>Palette Type</ParameterText>
-            <RadioGroup value={props.paletteType} onChange={(_e, v) => props.onPaletteTypeChange(v as PaletteType)}>
-              <FormControlLabel value="median-cut-variance" control={<Radio />} label="Median Cut (Variance)" />
-              <FormControlLabel value="median-cut-range" control={<Radio />} label="Median Cut (Range)" />
-            </RadioGroup>
-          </ListItem>
+          <RadioParameter<PaletteType>
+            text="Palette Type"
+            value={props.paletteType}
+            onChange={props.onPaletteTypeChange}
+            labels={{
+              "median-cut-variance": "Median Cut (variance)",
+              "median-cut-range": "Median Cut (range)"
+            }}
+          />
           <SliderParameter
             text="Colour Count"
             value={props.colorCount}
@@ -55,15 +57,17 @@ export default function Parameters(props: ParametersProps) {
             step={4}
             marks={marks(8, 16, 24, 32, 40, 48, 56, 64)}
           />
-          <ListItem className={styles.parameter}>
-            <ParameterText>Dither Method</ParameterText>
-            <RadioGroup value={props.ditherMethod} onChange={(_e, v) => props.onDitherMethodChange(v as DitherMethod)}>
-              <FormControlLabel value="floyd-steinberg" control={<Radio />} label="Floyd-Steinberg" />
-              <FormControlLabel value="aktinson" control={<Radio />} label="Aktinson" />
-              <FormControlLabel value="eric" control={<Radio />} label="hackereric" />
-              <FormControlLabel value="none" control={<Radio />} label="None" />
-            </RadioGroup>
-          </ListItem>
+          <RadioParameter<DitherMethod>
+            text="Dither Method"
+            value={props.ditherMethod}
+            onChange={props.onDitherMethodChange}
+            labels={{
+              "floyd-steinberg": "Floyd-Steinberg",
+              "aktinson": "Aktinson",
+              "eric": "hackereric",
+              "none": "None"
+            }}
+          />
         </Collapse>
       </List>
     </SidebarPaper>
