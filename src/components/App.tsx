@@ -6,13 +6,13 @@ import { ChevronLeft } from "@material-ui/icons";
 import Welcome from "./Welcome";
 import { ImageWorkerApi } from "../image/image.worker";
 import * as Comlink from "comlink";
-import SidebarPaper from "./sidebar/SidebarPaper";
 import Head from "next/head";
 import Parameters from "./sidebar/Parameters";
 import { DitherMethod, ditherMethods } from "../image/dither";
 import Export from "./sidebar/Export";
 import { PaletteType } from "../image/palette";
 import useLocalStorage from "../use-local-storage";
+import { SidebarPaper } from "./sidebar/common";
 
 const drawerWidth = 340;
 
@@ -147,7 +147,7 @@ export default function App() {
             />
           : <Welcome />}
       </main>
-      <Hidden smDown implementation="css">
+      <Hidden smDown implementation="js">
         <Drawer
           variant="permanent"
           open

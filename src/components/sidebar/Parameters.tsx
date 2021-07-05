@@ -3,8 +3,7 @@ import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
 import { DitherMethod } from "../../image/dither";
 import { PaletteType } from "../../image/palette";
-import { useSidebarStyles, ParameterText } from "./common";
-import SidebarPaper from "./SidebarPaper";
+import { useSidebarStyles, ParameterText, SliderParameter, SidebarPaper } from "./common";
 
 export interface ParametersProps {
   size: number;
@@ -33,19 +32,14 @@ export default function Parameters(props: ParametersProps) {
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={open}>
-          <ListItem className={styles.parameter}>
-            <ParameterText>Image Size</ParameterText>
-            <Slider
-              color="secondary"
-              value={props.size}
-              min={128}
-              max={1024}
-              step={64}
-              valueLabelDisplay="auto"
-              marks={marks(128, 256, 384, 512, 640, 768, 896, 1024)}
-              onChange={(_e, v) => props.onSizeChange(v as number)}
-            />
-          </ListItem>
+          <SliderParameter
+            text="Image Size"
+            value={props.size}
+            onChange={props.onSizeChange}
+            range={[128, 1024]}
+            step={64}
+            marks={marks(128, 256, 384, 512, 640, 768, 896, 1024)}
+          />
           <ListItem className={styles.parameter}>
             <ParameterText>Palette Type</ParameterText>
             <RadioGroup value={props.paletteType} onChange={(_e, v) => props.onPaletteTypeChange(v as PaletteType)}>
@@ -53,19 +47,14 @@ export default function Parameters(props: ParametersProps) {
               <FormControlLabel value="median-cut-range" control={<Radio />} label="Median Cut (Range)" />
             </RadioGroup>
           </ListItem>
-          <ListItem className={styles.parameter}>
-            <ParameterText>Colour Count</ParameterText>
-            <Slider
-              color="secondary"
-              value={props.colorCount}
-              min={8}
-              max={64}
-              step={4}
-              valueLabelDisplay="auto"
-              marks={marks(8, 16, 24, 32, 40, 48, 56, 64)}
-              onChange={(_e, v) => props.onColorCountChange(v as number)}
-            />
-          </ListItem>
+          <SliderParameter
+            text="Colour Count"
+            value={props.colorCount}
+            onChange={props.onColorCountChange}
+            range={[8, 64]}
+            step={4}
+            marks={marks(8, 16, 24, 32, 40, 48, 56, 64)}
+          />
           <ListItem className={styles.parameter}>
             <ParameterText>Dither Method</ParameterText>
             <RadioGroup value={props.ditherMethod} onChange={(_e, v) => props.onDitherMethodChange(v as DitherMethod)}>

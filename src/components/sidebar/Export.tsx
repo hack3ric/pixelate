@@ -1,8 +1,7 @@
 import { Collapse, List, ListItem, ListItemText, Typography, Slider, Button } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
-import SidebarPaper from "./SidebarPaper";
-import { useSidebarStyles, ParameterText } from "./common";
+import { useSidebarStyles, ParameterText, SliderParameter, SidebarPaper } from "./common";
 import * as Comlink from "comlink";
 import { ImageWorkerApi } from "../../image/image.worker";
 
@@ -50,19 +49,14 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={open}>
-          <ListItem className={styles.parameter}>
-            <ParameterText>Pixel Scale</ParameterText>
-            <Slider
-              color="secondary"
-              min={1}
-              max={8}
-              step={1}
-              valueLabelDisplay="auto"
-              value={pixelScale}
-              marks
-              onChange={(_e, v) => onPixelScaleChange(v as number)}
-            />
-          </ListItem>
+          <SliderParameter
+            text="Pixel Scale"
+            value={pixelScale}
+            onChange={onPixelScaleChange}
+            range={[1, 8]}
+            step={1}
+            marks
+          />
           <ListItem dense style={{ paddingLeft: 8 }}>
             <Button disabled={!outputData} color="secondary" onClick={handleExport}>Export</Button>
             <div style={{ flexGrow: 1 }}></div>
