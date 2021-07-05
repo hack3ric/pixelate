@@ -1,18 +1,26 @@
 import * as Comlink from "comlink";
-import { resize } from ".";
+import { resize, resizeDown } from ".";
 import applyColor from "./apply-color";
 import { Dither } from "./dither";
 import { PaletteType } from "./palette";
 import medianCut from "./palette/median-cut";
 
 function run(input: ImageData, size: number, colors: number, dither: Dither, paletteType: PaletteType): ImageData {
+  const iw = input.width;
+  const ih = input.height;
+
   let output: ImageData;
-  if (input.width > input.height) {
-    output = new ImageData(size, Math.trunc(size / input.width * input.height));
+  if (iw > ih) {
+    output = new ImageData(size, Math.trunc(size / iw * ih));
   } else {
-    output = new ImageData(Math.trunc(size / input.height * input.width), size);
+    output = new ImageData(Math.trunc(size / ih * iw), size);
   }
-  resize(input, output);
+
+  if (iw < output.width || ih < output.height) {
+    resize(input, output);
+  } else {
+    resizeDown(input, output);
+  }
 
   let palette: Uint8ClampedArray[];
   switch (paletteType) {

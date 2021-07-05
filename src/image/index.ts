@@ -14,12 +14,17 @@ export function getImageFromFile(file: File): Promise<HTMLImageElement> {
 }
 
 export function resize(from: ImageData, to: ImageData) {
-  for (let toY = 0; toY < to.height; toY++) {
-    for (let toX = 0; toX < to.width; toX++) {
-      const toPos = xyToI(toX, toY, to.width, to.height);
-      const fromX = Math.floor(toX * from.width / to.width);
-      const fromY = Math.floor(toY * from.height / to.height);
-      const fromPos = (fromY * from.width + fromX) * 4;
+  const fw = from.width;
+  const fh = from.height;
+  const tw = to.width;
+  const th = to.height;
+
+  for (let toY = 0; toY < th; toY++) {
+    for (let toX = 0; toX < tw; toX++) {
+      const toPos = xyToI(toX, toY, tw);
+      const fromX = Math.floor(toX * fw / tw);
+      const fromY = Math.floor(toY * fh / th);
+      const fromPos = xyToI(fromX, fromY, fw);
 
       for (let i = 0; i < 4; i++) {
         to.data[toPos + i] = from.data[fromPos + i]
@@ -28,10 +33,36 @@ export function resize(from: ImageData, to: ImageData) {
   }
 }
 
-export function xyToI(x: number, y: number, width: number, height: number): number {
-  if (x > width - 1 || y > height - 1 || x < 0 || y < 0) {
-    return -1;
-  } else {
-    return (y * width + x) * 4;
+export function resizeDown(from: ImageData, to: ImageData) {
+  const fw = from.width;
+  const fh = from.height;
+  const tw = to.width;
+  const th = to.height;
+
+  for (let toY = 0; toY < th; toY++) {
+    for (let toX = 0; toX < tw; toX++) {
+      const toPos = xyToI(toX, toY, tw);
+      const fromX = Math.floor(toX * fw / tw);
+      const fromY = Math.floor(toY * fh / th);
+
+      const sampleSizeW = Math.floor(fw / tw / 1.5);
+      const sampleSizeH = Math.floor(fh / th / 1.5);
+
+      let data = [0, 0, 0, 0];
+      for (let x = 0; x < sampleSizeW; x++) {
+        for (let y = 0; y < sampleSizeH; y++) {
+          for (let i = 0; i < 4; i++) {
+            data[i] += from.data[xyToI(fromX + x, fromY + y, fw) + i]
+          }
+        }
+      }
+      for (let i = 0; i < 4; i++) {
+        to.data[toPos + i] = data[i] / sampleSizeW / sampleSizeH;
+      }
+    }
   }
+}
+
+export function xyToI(x: number, y: number, width: number): number {
+  return (y * width + x) * 4;
 }
