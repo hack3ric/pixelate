@@ -13,7 +13,7 @@ export default function applyColor(input: ImageData, palette: Uint8ClampedArray[
           if (errI < 0) {
             continue;
           }
-          input.data[errI + j] += error[j] * p[2];
+          input.data[errI + j] += Math.floor(error[j] * p[2]);
         }
       }
     }
