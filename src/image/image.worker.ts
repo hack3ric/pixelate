@@ -9,17 +9,25 @@ function run(input: ImageData, size: number, colors: number, dither: Dither, pal
   const iw = input.width;
   const ih = input.height;
 
-  let output: ImageData;
+  let ow: number;
+  let oh: number;
   if (iw > ih) {
-    output = new ImageData(size, Math.trunc(size / iw * ih));
+    ow = size;
+    oh = Math.trunc(size / iw * ih);
   } else {
-    output = new ImageData(Math.trunc(size / ih * iw), size);
+    ow = Math.trunc(size / ih * iw);
+    oh = size;
   }
-
-  if (iw < output.width || ih < output.height) {
-    resize(input, output);
+  let output: ImageData;
+  if (iw === ow && ih === oh) {
+    output = new ImageData(input.data, ow, oh);
   } else {
-    resizeDown(input, output);
+    output = new ImageData(ow, oh);
+    if (iw / ow / 1.5 < 2 || ih / oh / 1.5 < 2) {
+      resize(input, output);
+    } else {
+      resizeDown(input, output);
+    }
   }
 
   let palette: Uint8ClampedArray[];
