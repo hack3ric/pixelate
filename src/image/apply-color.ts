@@ -1,23 +1,26 @@
-import { xyToI } from ".";
+import { xyToPos } from ".";
 import { Dither } from "./dither";
 
-function xyToIChecked(x: number, y: number, width: number, height: number): number {
+function xyToPosChecked(x: number, y: number, width: number, height: number): number {
   if (x > width - 1 || y > height - 1 || x < 0 || y < 0) {
     return -1;
   } else {
-    return xyToI(x, y, width);
+    return xyToPos(x, y, width);
   }
 }
 
 export default function applyColor(input: ImageData, palette: Uint8ClampedArray[], dither: Dither) {
-  for (let y = 0; y < input.height; y++) {
-    for (let x = 0; x < input.width; x++) {
-      const i = xyToIChecked(x, y, input.width, input.height);
+  const iw = input.width;
+  const ih = input.height;
+
+  for (let y = 0; y < ih; y++) {
+    for (let x = 0; x < iw; x++) {
+      const i = xyToPosChecked(x, y, iw, ih);
       const [paletteColor, error] = closestInPalette(input.data.slice(i, i + 3), palette);
       for (let j = 0; j < 3; j++) {
         input.data[i + j] = paletteColor[j];
         for (let p of dither) {
-          const errI = xyToIChecked(x + p[0], y + p[1], input.width, input.height);
+          const errI = xyToPosChecked(x + p[0], y + p[1], iw, ih);
           if (errI < 0) {
             continue;
           }

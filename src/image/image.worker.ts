@@ -1,5 +1,5 @@
 import * as Comlink from "comlink";
-import { resize, resizeDown } from ".";
+import { resizeNearestNeighbor, resizeDownSupersampling } from ".";
 import applyColor from "./apply-color";
 import { Dither } from "./dither";
 import { PaletteType } from "./palette";
@@ -24,9 +24,9 @@ function run(input: ImageData, size: number, colors: number, dither: Dither, pal
   } else {
     output = new ImageData(ow, oh);
     if (iw / ow / 1.5 < 2 || ih / oh / 1.5 < 2) {
-      resize(input, output);
+      resizeNearestNeighbor(input, output);
     } else {
-      resizeDown(input, output);
+      resizeDownSupersampling(input, output);
     }
   }
 
@@ -50,7 +50,7 @@ function run(input: ImageData, size: number, colors: number, dither: Dither, pal
 
 function scale(input: ImageData, scale: number): ImageData {
   const output = new ImageData(input.width * scale, input.height * scale);
-  resize(input, output);
+  resizeNearestNeighbor(input, output);
   return output;
 }
 

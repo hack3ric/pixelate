@@ -2,18 +2,18 @@ export function getImageFromFile(file: File): Promise<HTMLImageElement> {
   const url = URL.createObjectURL(file);
   return new Promise((resolve, reject) => {
     const image = new Image();
-    image.onload = function() {
+    image.onload = function () {
       URL.revokeObjectURL(url);
       resolve(image);
     };
-    image.onerror = function(event) {
+    image.onerror = function (_event) {
       reject("Failed loading image");
     }
     image.src = url
   });
 }
 
-export function resize(from: ImageData, to: ImageData) {
+export function resizeNearestNeighbor(from: ImageData, to: ImageData) {
   const fw = from.width;
   const fh = from.height;
   const tw = to.width;
@@ -21,10 +21,10 @@ export function resize(from: ImageData, to: ImageData) {
 
   for (let toY = 0; toY < th; toY++) {
     for (let toX = 0; toX < tw; toX++) {
-      const toPos = xyToI(toX, toY, tw);
+      const toPos = xyToPos(toX, toY, tw);
       const fromX = Math.floor(toX * fw / tw);
       const fromY = Math.floor(toY * fh / th);
-      const fromPos = xyToI(fromX, fromY, fw);
+      const fromPos = xyToPos(fromX, fromY, fw);
 
       for (let i = 0; i < 4; i++) {
         to.data[toPos + i] = from.data[fromPos + i]
@@ -33,7 +33,7 @@ export function resize(from: ImageData, to: ImageData) {
   }
 }
 
-export function resizeDown(from: ImageData, to: ImageData) {
+export function resizeDownSupersampling(from: ImageData, to: ImageData) {
   const fw = from.width;
   const fh = from.height;
   const tw = to.width;
@@ -41,7 +41,7 @@ export function resizeDown(from: ImageData, to: ImageData) {
 
   for (let toY = 0; toY < th; toY++) {
     for (let toX = 0; toX < tw; toX++) {
-      const toPos = xyToI(toX, toY, tw);
+      const toPos = xyToPos(toX, toY, tw);
       const fromX = Math.floor(toX * fw / tw);
       const fromY = Math.floor(toY * fh / th);
 
@@ -52,7 +52,7 @@ export function resizeDown(from: ImageData, to: ImageData) {
       for (let x = 0; x < sampleSizeW; x++) {
         for (let y = 0; y < sampleSizeH; y++) {
           for (let i = 0; i < 4; i++) {
-            data[i] += from.data[xyToI(fromX + x, fromY + y, fw) + i]
+            data[i] += from.data[xyToPos(fromX + x, fromY + y, fw) + i]
           }
         }
       }
@@ -63,6 +63,6 @@ export function resizeDown(from: ImageData, to: ImageData) {
   }
 }
 
-export function xyToI(x: number, y: number, width: number): number {
+export function xyToPos(x: number, y: number, width: number): number {
   return (y * width + x) * 4;
 }
