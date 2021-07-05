@@ -1,7 +1,7 @@
 import { Collapse, List, ListItem, ListItemText, Typography, Button } from "@material-ui/core";
 import { ExpandLessRounded, ExpandMoreRounded } from "@material-ui/icons";
 import React, { useState } from "react";
-import { useSidebarStyles, SliderParameter, SidebarPaper } from "./common";
+import { SliderParameter, SidebarPaper } from "./common";
 import * as Comlink from "comlink";
 import { ImageWorkerApi } from "../../image/image.worker";
 
@@ -14,7 +14,6 @@ export interface ExportProps {
 }
 
 export default function Export({ imageWorker, filename, outputData, pixelScale, onPixelScaleChange }: ExportProps) {
-  const styles = useSidebarStyles();
   const [open, setOpen] = useState(true);
 
   async function handleExport() {

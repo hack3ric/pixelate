@@ -29,9 +29,7 @@ export default function Welcome() {
 
   return (
     <div className={styles.welcome}>
-      <div>
       <Typography className={styles.typography}>Load an image to continue</Typography>
-      </div>
     </div>
   );
 }

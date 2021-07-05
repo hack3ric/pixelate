@@ -5,7 +5,6 @@ export default function medianCut(data: Uint8ClampedArray, colors: number, metho
   }
 
   const Bucket = method === "variance" ? VarianceBucket : RangeBucket;
-
   const buckets = [new Bucket(pixels)];
   for (let i = 0; i < colors - 1; i++) {
     const bucketToSplit = buckets.reduce((a, c) => c.getSortKey() > a.getSortKey() ? c : a);
@@ -62,12 +61,10 @@ class VarianceBucket {
 
 
 class RangeBucket {
-  pixels: Uint8ClampedArray[];
   dimensions = new Uint8ClampedArray(3);
   channelToSplit = -1;
 
-  constructor(pixels: Uint8ClampedArray[]) {
-    this.pixels = pixels;
+  constructor(private pixels: Uint8ClampedArray[]) {
     this.calculate();
   }
 
@@ -87,9 +84,9 @@ class RangeBucket {
 
   splitOff(): RangeBucket {
     this.pixels.sort((a, b) => a[this.channelToSplit] - b[this.channelToSplit]);
-    const newVbox = new RangeBucket(this.pixels.splice(Math.floor(this.pixels.length / 2)));
+    const newBucket = new RangeBucket(this.pixels.splice(Math.floor(this.pixels.length / 2)));
     this.calculate();
-    return newVbox;
+    return newBucket;
   }
 
   getSortKey() {

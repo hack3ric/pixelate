@@ -3,7 +3,7 @@ import { ExpandLessRounded, ExpandMoreRounded } from "@material-ui/icons";
 import React, { useState } from "react";
 import { DitherMethod } from "../../image/dither";
 import { PaletteType } from "../../image/palette";
-import { useSidebarStyles, SliderParameter, SidebarPaper, RadioParameter } from "./common";
+import { SliderParameter, SidebarPaper, RadioParameter } from "./common";
 
 export interface ParametersProps {
   size: number;
