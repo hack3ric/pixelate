@@ -1,7 +1,7 @@
 import { Collapse, List, ListItem, ListItemText } from "@material-ui/core";
 import { ExpandLessRounded, ExpandMoreRounded } from "@material-ui/icons";
 import React, { useState } from "react";
-import { DitherMethod } from "../../image/dither";
+import { DitherMethod } from "../../image/apply-color";
 import { PaletteType } from "../../image/palette";
 import { SliderParameter, SidebarPaper, RadioParameter } from "./common";
 

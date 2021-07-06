@@ -1,19 +1,34 @@
 import * as Comlink from "comlink";
-import { resize } from ".";
-import applyColor from "./apply-color";
-import { Dither } from "./dither";
+import { resizeNearestNeighbor, resizeDownSupersampling } from "./resize";
+import applyColor, { Dither } from "./apply-color";
 import { PaletteType } from "./palette";
 import medianCut from "./palette/median-cut";
 import octree from "./palette/octree";
 
 function run(input: ImageData, size: number, colors: number, dither: Dither, paletteType: PaletteType): ImageData {
-  let output: ImageData;
-  if (input.width > input.height) {
-    output = new ImageData(size, Math.trunc(size / input.width * input.height));
+  const iw = input.width;
+  const ih = input.height;
+
+  let ow: number;
+  let oh: number;
+  if (iw > ih) {
+    ow = size;
+    oh = Math.trunc(size / iw * ih);
   } else {
-    output = new ImageData(Math.trunc(size / input.height * input.width), size);
+    ow = Math.trunc(size / ih * iw);
+    oh = size;
   }
-  resize(input, output);
+  let output: ImageData;
+  if (iw === ow && ih === oh) {
+    output = new ImageData(input.data, ow, oh);
+  } else {
+    output = new ImageData(ow, oh);
+    if (iw / ow / 1.5 < 2 || ih / oh / 1.5 < 2) {
+      resizeNearestNeighbor(input, output);
+    } else {
+      resizeDownSupersampling(input, output);
+    }
+  }
 
   octree(input.data, 3);
 
@@ -37,7 +52,7 @@ function run(input: ImageData, size: number, colors: number, dither: Dither, pal
 
 function scale(input: ImageData, scale: number): ImageData {
   const output = new ImageData(input.width * scale, input.height * scale);
-  resize(input, output);
+  resizeNearestNeighbor(input, output);
   return output;
 }
 

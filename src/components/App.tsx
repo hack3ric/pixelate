@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, CircularProgress, createStyles, Drawer, Fab, Hidden, makeStyles, Snackbar } from "@material-ui/core";
-import { getImageFromFile } from "../image";
+import { getImageFromFile } from "../image/util";
 import Canvas from "./Canvas";
 import { ChevronLeftRounded } from "@material-ui/icons";
 import Welcome from "./Welcome";
@@ -8,11 +8,11 @@ import { ImageWorkerApi } from "../image/image.worker";
 import * as Comlink from "comlink";
 import Head from "next/head";
 import Parameters from "./sidebar/Parameters";
-import { DitherMethod, ditherMethods } from "../image/dither";
 import Export from "./sidebar/Export";
 import { PaletteType } from "../image/palette";
 import useLocalStorage from "../use-local-storage";
 import { SidebarPaper } from "./sidebar/common";
+import { DitherMethod, ditherMethods } from "../image/apply-color";
 
 const drawerWidth = 340;
 
