@@ -13,12 +13,56 @@ export default function medianCut(data: Uint8ClampedArray, colors: number, metho
   return buckets.map(b => b.getMean());
 }
 
-class VarianceBucket {
+interface Bucket {
+  pixels: Uint8ClampedArray[];
+  channelToSplit: number;
+  calculate(): void;
+  getSortKey(): number;
+  getMean(): Uint8ClampedArray;
+}
+
+function bucketSplitOff<T extends Bucket>(bucket: T, ctor: (pixels: Uint8ClampedArray[]) => T): T {
+  const cts = bucket.channelToSplit;
+  const p = bucket.pixels;
+
+  p.sort((a, b) => a[cts] - b[cts]);
+  const newBucket = ctor(p.splice(Math.floor(p.length / 2)));
+  bucket.calculate();
+  return newBucket;
+}
+
+function bucketSplitOff2<T extends Bucket>(bucket: T, ctor: (pixels: Uint8ClampedArray[]) => T): T {
+  const cts = bucket.channelToSplit;
+  const p = bucket.pixels;
+  
+  p.sort((a, b) => a[cts] - b[cts]);
+  const middle = Math.floor(p.length / 2);
+  const medianPixelChannel = p[middle][cts];
+
+  let left: number = middle;
+  let right: number = middle;
+
+  while (left >= 0 && p[left][cts] === medianPixelChannel) left--;
+  left++;
+  while (right < p.length && p[right][cts] === medianPixelChannel) right++;
+
+  const leftCount = left + 1;
+  const rightCount = p.length - right;
+  const splitPoint = leftCount > rightCount
+    ? Math.floor(left / 2)
+    : Math.floor((right + p.length) / 2);
+
+  const newBucket = ctor(p.splice(splitPoint));
+  bucket.calculate();
+  return newBucket;
+}
+
+class VarianceBucket implements Bucket {
   mean = new Float32Array(3);
   maxVariance = -1;
   channelToSplit = -1;
 
-  constructor(private pixels: Uint8ClampedArray[]) {
+  constructor(public pixels: Uint8ClampedArray[]) {
     this.calculate();
   }
 
@@ -44,10 +88,7 @@ class VarianceBucket {
   }
 
   splitOff(): VarianceBucket {
-    this.pixels.sort((a, b) => a[this.channelToSplit] - b[this.channelToSplit]);
-    const newBucket = new VarianceBucket(this.pixels.splice(Math.floor(this.pixels.length / 2)));
-    this.calculate();
-    return newBucket;
+    return bucketSplitOff2(this, p => new VarianceBucket(p));
   }
 
   getSortKey() {
@@ -60,11 +101,11 @@ class VarianceBucket {
 }
 
 
-class RangeBucket {
+class RangeBucket implements Bucket {
   dimensions = new Uint8ClampedArray(3);
   channelToSplit = -1;
 
-  constructor(private pixels: Uint8ClampedArray[]) {
+  constructor(public pixels: Uint8ClampedArray[]) {
     this.calculate();
   }
 
@@ -83,10 +124,7 @@ class RangeBucket {
   }
 
   splitOff(): RangeBucket {
-    this.pixels.sort((a, b) => a[this.channelToSplit] - b[this.channelToSplit]);
-    const newBucket = new RangeBucket(this.pixels.splice(Math.floor(this.pixels.length / 2)));
-    this.calculate();
-    return newBucket;
+    return bucketSplitOff2(this, p => new RangeBucket(p));
   }
 
   getSortKey() {
