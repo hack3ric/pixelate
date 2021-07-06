@@ -66,3 +66,9 @@ export function resizeDownSupersampling(from: ImageData, to: ImageData) {
 export function xyToPos(x: number, y: number, width: number): number {
   return (y * width + x) * 4;
 }
+
+export function posToXy(pos: number, width: number): [number, number] {
+  const y = Math.floor(pos / 4 / width);
+  const x = pos / 4 - y * width;
+  return [x, y];
+}
