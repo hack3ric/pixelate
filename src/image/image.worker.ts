@@ -1,7 +1,6 @@
 import * as Comlink from "comlink";
-import { resizeNearestNeighbor, resizeDownSupersampling } from ".";
-import applyColor from "./apply-color";
-import { Dither } from "./dither";
+import { resizeNearestNeighbor, resizeDownSupersampling } from "./resize";
+import applyColor, { Dither } from "./apply-color";
 import { PaletteType } from "./palette";
 import medianCut from "./palette/median-cut";
 

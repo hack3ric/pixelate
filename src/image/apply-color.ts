@@ -1,13 +1,35 @@
-import { posToXy, xyToPos } from ".";
-import { Dither } from "./dither";
+import { posToXy, xyToPos } from "./util";
 
-function xyToPosChecked(x: number, y: number, width: number, height: number): number {
-  if (x > width - 1 || y > height - 1 || x < 0 || y < 0) {
-    return -1;
-  } else {
-    return xyToPos(x, y, width);
-  }
-}
+export type Dither = [number, number, number][];
+
+export type DitherMethod =
+  | "floyd-steinberg"
+  | "aktinson"
+  | "eric"
+  | "none";
+
+export const ditherMethods: { [key in DitherMethod]: Dither } = {
+  "floyd-steinberg": [
+    [1, 0, 7/16],
+    [-1, 1, 3/16],
+    [0, 1, 5/16],
+    [1, 1, 1/16]
+  ],
+  "aktinson": [
+    [1, 0, 1/8],
+    [2, 0, 1/8],
+    [-1, 1, 1/8],
+    [0, 1, 1/8],
+    [1, 1, 1/8],
+    [0, 2, 1/8]
+  ],
+  "eric": [
+    [1, 0, 1/4],
+    [0, 1, 1/4],
+    [1, 1, 1/4]
+  ],
+  "none": []
+};
 
 export default function applyColor(input: ImageData, palette: Uint8ClampedArray[], dither: Dither) {
   const iw = input.width;
@@ -25,6 +47,14 @@ export default function applyColor(input: ImageData, palette: Uint8ClampedArray[
         id[errPos + j] += Math.trunc(error[j] * p[2]);
       }
     }
+  }
+}
+
+function xyToPosChecked(x: number, y: number, width: number, height: number): number {
+  if (x > width - 1 || y > height - 1 || x < 0 || y < 0) {
+    return -1;
+  } else {
+    return xyToPos(x, y, width);
   }
 }
 
