@@ -1,7 +1,7 @@
 import * as Comlink from "comlink";
 import { resizeNearestNeighbor, resizeDownSupersampling } from "./resize";
 import applyColor, { Dither } from "./apply-color";
-import { medianCutHybrid, PaletteType } from "./palette";
+import { PaletteType } from "./palette";
 import medianCut from "./palette/median-cut";
 
 function run(input: ImageData, size: number, colors: number, dither: Dither, paletteType: PaletteType): ImageData {
@@ -37,8 +37,6 @@ function run(input: ImageData, size: number, colors: number, dither: Dither, pal
     case "median-cut-range":
       palette = medianCut(output.data, colors, "range");
       break;
-    case "median-cut-hybrid":
-      palette = medianCutHybrid(output.data, colors);
   }
 
   for (let color of palette) {
