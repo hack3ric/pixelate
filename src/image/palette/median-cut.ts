@@ -45,7 +45,32 @@ class VarianceBucket {
 
   splitOff(): VarianceBucket {
     this.pixels.sort((a, b) => a[this.channelToSplit] - b[this.channelToSplit]);
-    const newBucket = new VarianceBucket(this.pixels.splice(Math.floor(this.pixels.length / 2)));
+    const middle = Math.floor(this.pixels.length / 2);
+    const c = this.channelToSplit;
+    const medianPixelChannel = this.pixels[middle][this.channelToSplit];
+
+    let left: number = middle;
+    let right: number = middle;
+
+    while (left >= 0 && this.pixels[left][c] === medianPixelChannel) {
+      left--;
+    }
+    left++;
+    // console.log(this.pixels[left - 1][c], this.pixels[left][c], this.pixels[left + 1][c]);
+
+    while (right < this.pixels.length && this.pixels[right][c] === medianPixelChannel) {
+      right++;
+    }
+    // console.log(this.pixels[right - 1][c], this.pixels[right][c], this.pixels[right + 1][c]);
+
+    const leftCount = left + 1;
+    const rightCount = this.pixels.length - right;
+
+    const splitPoint = leftCount > rightCount ? Math.floor(left / 2) : Math.floor((right + this.pixels.length) / 2);
+
+    // const splitPoint = middle;
+
+    const newBucket = new VarianceBucket(this.pixels.splice(splitPoint));
     this.calculate();
     return newBucket;
   }
@@ -84,7 +109,32 @@ class RangeBucket {
 
   splitOff(): RangeBucket {
     this.pixels.sort((a, b) => a[this.channelToSplit] - b[this.channelToSplit]);
-    const newBucket = new RangeBucket(this.pixels.splice(Math.floor(this.pixels.length / 2)));
+    const middle = Math.floor(this.pixels.length / 2);
+    const c = this.channelToSplit;
+    const medianPixelChannel = this.pixels[middle][this.channelToSplit];
+
+    let left: number = middle;
+    let right: number = middle;
+
+    while (left >= 0 && this.pixels[left][c] === medianPixelChannel) {
+      left--;
+    }
+    left++;
+    // console.log(this.pixels[left - 1][c], this.pixels[left][c], this.pixels[left + 1][c]);
+
+    while (right < this.pixels.length && this.pixels[right][c] === medianPixelChannel) {
+      right++;
+    }
+    // console.log(this.pixels[right - 1][c], this.pixels[right][c], this.pixels[right + 1][c]);
+
+    const leftCount = left + 1;
+    const rightCount = this.pixels.length - right;
+
+    const splitPoint = leftCount > rightCount ? Math.floor(left / 2) : Math.floor((right + this.pixels.length) / 2);
+
+    // const splitPoint = middle;
+
+    const newBucket = new RangeBucket(this.pixels.splice(splitPoint));
     this.calculate();
     return newBucket;
   }
