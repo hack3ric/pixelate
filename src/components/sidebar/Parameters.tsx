@@ -57,7 +57,7 @@ export default function Parameters(props: ParametersProps) {
             marks={marks(8, 16, 24, 32, 40, 48, 56, 64)}
           />
           <RadioParameter<DitherMethod>
-            text="Dither Method"
+            text="Dithering Method"
             value={props.ditherMethod}
             onChange={props.onDitherMethodChange}
             labels={{
