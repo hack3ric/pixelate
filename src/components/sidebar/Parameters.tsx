@@ -60,7 +60,7 @@ export default function Parameters(props: ParametersProps) {
             />
           </Collapse>
           <RadioParameter<DitherMethod>
-            text="Dither Method"
+            text="Dithering Method"
             value={props.ditherMethod}
             onChange={props.onDitherMethodChange}
             labels={{
