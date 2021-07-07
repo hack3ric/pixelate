@@ -30,8 +30,6 @@ function run(input: ImageData, size: number, colors: number, dither: Dither, pal
     }
   }
 
-  octree(input.data, 3);
-
   let palette: Uint8ClampedArray[];
   switch (paletteType) {
     case "median-cut-variance":

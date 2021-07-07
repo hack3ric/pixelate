@@ -49,14 +49,16 @@ export default function Parameters(props: ParametersProps) {
               "octree": "Octree"
             }}
           />
-          <SliderParameter
-            text="Colour Count"
-            value={props.colorCount}
-            onChange={props.onColorCountChange}
-            range={[8, 64]}
-            step={4}
-            marks={marks(8, 16, 24, 32, 40, 48, 56, 64)}
-          />
+          <Collapse in={props.paletteType === "median-cut-range" || props.paletteType === "median-cut-variance"}>
+            <SliderParameter
+              text="Colour Count"
+              value={props.colorCount}
+              onChange={props.onColorCountChange}
+              range={[8, 64]}
+              step={4}
+              marks={marks(8, 16, 24, 32, 40, 48, 56, 64)}
+            />
+          </Collapse>
           <RadioParameter<DitherMethod>
             text="Dither Method"
             value={props.ditherMethod}

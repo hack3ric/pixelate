@@ -9,10 +9,6 @@ export default function octree(data: Uint8ClampedArray, depth: number): Uint8Cla
     }
     colorMap.set(index, [count + 1, colorSum]);
   }
-  // colorMap.forEach((v, k) => {
-  //   console.log(`${k.toString(8).padStart(depth, "0")} => ${v}`);
-  // });
-  // console.log("Total: ", colorMap.size);
   const result = [];
   for (let [count, colorSum] of colorMap.values()) {
     result.push(new Uint8ClampedArray(colorSum.map(v => v / count)));
@@ -24,7 +20,7 @@ function rgbIndex(rgb: Uint8ClampedArray, depth: number) {
   let result = 0;
   for (let i = 7; i > 0 && i > 7 - depth; i--) {
     for (let j = 0; j < 3; j++) {
-      const bit = (rgb[j] >> i) - (rgb[j] >> i + 1) * 2;
+      const bit = rgb[j] & (1 << i);
       result += bit << (2 - j + 3 * (i - 8 + depth))
     }
   }
