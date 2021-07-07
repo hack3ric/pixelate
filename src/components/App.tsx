@@ -60,10 +60,10 @@ export default function App() {
   const [generating, setGenerating] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
 
-  const [size, setSize] = useLocalStorage("size", 512);
-  const [colorCount, setColorCount] = useLocalStorage("colorCount", 24);
-  const [paletteType, setPaletteType] = useLocalStorage<PaletteType>("paletteType", "median-cut-variance");
-  const [ditherMethod, setDitherMethod] = useLocalStorage<DitherMethod>("ditherMethod", "eric");
+  const [size, setSize] = useLocalStorage("size", 320);
+  const [colorCount, setColorCount] = useLocalStorage("colorCount", 32);
+  const [paletteType, setPaletteType] = useLocalStorage<PaletteType>("paletteType", "octree");
+  const [ditherMethod, setDitherMethod] = useLocalStorage<DitherMethod>("ditherMethod", "aktinson");
   const [pixelScale, setPixelScale] = useLocalStorage("pixelScale", 4);
 
   useEffect(() => {

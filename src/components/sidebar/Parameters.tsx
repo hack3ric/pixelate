@@ -35,28 +35,28 @@ export default function Parameters(props: ParametersProps) {
             text="Image Size"
             value={props.size}
             onChange={props.onSizeChange}
-            range={[128, 1024]}
+            range={[128, 512]}
             step={64}
-            marks={marks(128, 256, 384, 512, 640, 768, 896, 1024)}
+            marks
           />
           <RadioParameter<PaletteType>
             text="Palette Type"
             value={props.paletteType}
             onChange={props.onPaletteTypeChange}
             labels={{
+              "octree": "Octree",
               "median-cut-variance": "Median Cut (variance)",
-              "median-cut-range": "Median Cut (range)",
-              "octree": "Octree"
+              "median-cut-range": "Median Cut (range)"
             }}
           />
-          <Collapse in={props.paletteType === "median-cut-range" || props.paletteType === "median-cut-variance"}>
+          <Collapse in={props.paletteType !== "octree"}>
             <SliderParameter
               text="Colour Count"
               value={props.colorCount}
               onChange={props.onColorCountChange}
               range={[8, 64]}
               step={4}
-              marks={marks(8, 16, 24, 32, 40, 48, 56, 64)}
+              marks
             />
           </Collapse>
           <RadioParameter<DitherMethod>
