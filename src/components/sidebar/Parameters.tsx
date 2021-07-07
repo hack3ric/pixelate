@@ -45,7 +45,8 @@ export default function Parameters(props: ParametersProps) {
             onChange={props.onPaletteTypeChange}
             labels={{
               "median-cut-variance": "Median Cut (variance)",
-              "median-cut-range": "Median Cut (range)"
+              "median-cut-range": "Median Cut (range)",
+              "octree": "Octree"
             }}
           />
           <SliderParameter
