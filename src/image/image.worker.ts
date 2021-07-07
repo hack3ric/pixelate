@@ -3,6 +3,7 @@ import { resizeNearestNeighbor, resizeDownSupersampling } from "./resize";
 import applyColor, { Dither } from "./apply-color";
 import { PaletteType } from "./palette";
 import medianCut from "./palette/median-cut";
+import octree from "./palette/octree";
 
 function run(input: ImageData, size: number, colors: number, dither: Dither, paletteType: PaletteType): ImageData {
   const iw = input.width;
@@ -37,11 +38,15 @@ function run(input: ImageData, size: number, colors: number, dither: Dither, pal
     case "median-cut-range":
       palette = medianCut(output.data, colors, "range");
       break;
+    case "octree":
+      palette = octree(output.data, 2);
+      break;
   }
 
   for (let color of palette) {
     console.log("%c          ", `background: rgb(${color[0]}, ${color[1]}, ${color[2]})`)
   }
+  console.log("\n");
 
   applyColor(output, palette, dither);
   return output;
