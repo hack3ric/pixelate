@@ -56,7 +56,7 @@ export default function App() {
   const [inputData, setInputData] = useState<ImageData | undefined>();
   const [outputData, setOutputData] = useState<ImageData | undefined>();
 
-  const [mobileOpenDrawer, setMobileOpenDrawer] = useState(false);
+  const [openMobileDrawer, setOpenMobileDrawer] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
 
@@ -96,10 +96,11 @@ export default function App() {
     );
     setOutputData(output);
     setGenerating(false);
+    setOpenMobileDrawer(false);
   }
 
   function handleDrawerToggle() {
-    setMobileOpenDrawer(v => !v);
+    setOpenMobileDrawer(v => !v);
   }
 
   function handleDrawerClick(e: React.MouseEvent) {
@@ -160,7 +161,7 @@ export default function App() {
       <Hidden mdUp implementation="js">
         <Drawer
           variant="temporary"
-          open={mobileOpenDrawer}
+          open={openMobileDrawer}
           PaperProps={{ onClick: handleDrawerClick }}
           onClose={handleDrawerToggle}
           classes={{ paper: styles.drawer }}
@@ -171,7 +172,7 @@ export default function App() {
         </Drawer>
       </Hidden>
       <Hidden mdUp implementation="css">
-        {mobileOpenDrawer
+        {openMobileDrawer
           ? false
           : <Fab
               className={styles.expandDrawerButton}

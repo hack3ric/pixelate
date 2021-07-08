@@ -16,10 +16,6 @@ export interface ParametersProps {
   onDitherMethodChange: (v: DitherMethod) => void;
 }
 
-function marks(...m: number[]): { value: number }[] {
-  return m.map(i => ({ value: i }));
-}
-
 export default function Parameters(props: ParametersProps) {
   const [open, setOpen] = useState(true);
 
@@ -64,9 +60,8 @@ export default function Parameters(props: ParametersProps) {
             value={props.ditherMethod}
             onChange={props.onDitherMethodChange}
             labels={{
-              "floyd-steinberg": "Floyd-Steinberg",
+              "floyd-steinberg": "Floyd-Steinberg (nerfed)",
               "aktinson": "Aktinson",
-              "eric": "hackereric",
               "none": "None"
             }}
           />
