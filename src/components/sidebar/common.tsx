@@ -60,7 +60,6 @@ export function SliderParameter(props: SliderParameterProps) {
     <ListItem className={styles.parameter}>
       <ParameterText>{props.text}</ParameterText>
       <Slider
-        color="secondary"
         value={props.value}
         onChange={(_e, v) => props.onChange(v as number)}
         min={props.range[0]}

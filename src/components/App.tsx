@@ -116,7 +116,7 @@ export default function App() {
         Load Image
         <input type="file" accept="image/*" hidden onChange={handleInputChange} />
       </Button>
-      <Button color="secondary" onClick={handleApply} disabled={generating || !inputData}>Apply</Button>
+      <Button color="primary" onClick={handleApply} disabled={generating || !inputData}>Apply</Button>
     </SidebarPaper>
     <Parameters
       size={size} onSizeChange={setSize}
