@@ -22,7 +22,7 @@ export default function Parameters(props: ParametersProps) {
   return (
     <SidebarPaper>
       <List disablePadding>
-        <ListItem button onClick={() => setOpen(!open)}>
+        <ListItem dense button onClick={() => setOpen(!open)}>
           <ListItemText primary="Parameters" />
           {open ? <ExpandLessRounded /> : <ExpandMoreRounded />}
         </ListItem>

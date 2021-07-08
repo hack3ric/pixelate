@@ -39,7 +39,7 @@ export function ParameterText(props: { children?: React.ReactNode }) {
   return (
     <ListItemText
       primary={props.children}
-      primaryTypographyProps={{ variant: "body2", color: "textSecondary" }}
+      primaryTypographyProps={{ variant: "overline", color: "textSecondary" }}
     />
   );
 }

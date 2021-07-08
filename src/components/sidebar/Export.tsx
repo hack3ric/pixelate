@@ -43,7 +43,7 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
   return (
     <SidebarPaper>
       <List disablePadding>
-        <ListItem button onClick={() => setOpen(!open)}>
+        <ListItem dense button onClick={() => setOpen(!open)}>
           <ListItemText primary="Export" />
           {open ? <ExpandLessRounded /> : <ExpandMoreRounded />}
         </ListItem>

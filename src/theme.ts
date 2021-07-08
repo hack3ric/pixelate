@@ -14,7 +14,10 @@ export default function makeTheme(prefersDarkMode: boolean): Theme {
     typography: {
       fontFamily: "Rubik, -apple-system, BlinkMacSystemFont, " +
         "'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', " +
-        "'Helvetica Neue', sans-serif"
+        "'Helvetica Neue', sans-serif",
+      overline: {
+        lineHeight: 2
+      }
     },
     overrides: {
       MuiCssBaseline: {
