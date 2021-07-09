@@ -10,7 +10,7 @@ export default function medianCut(data: Uint8ClampedArray, colors: number, metho
     const bucketToSplit = buckets.reduce((a, c) => c.getSortKey() > a.getSortKey() ? c : a);
     buckets.push(bucketToSplit.splitOff());
   }
-  return buckets.map(b => b.getMean());
+  return [...new Set(buckets.map(b => b.getMean()))];
 }
 
 interface Bucket {

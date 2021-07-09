@@ -13,6 +13,7 @@ export default function octree(data: Uint8ClampedArray, depth: number): Uint8Cla
   for (let [count, colorSum] of colorMap.values()) {
     result.push(new Uint8ClampedArray(colorSum.map(v => v / count)));
   }
+  // The result should not have duplicates due to the nature of octree, so no dedupe
   return result;
 }
 
