@@ -31,7 +31,7 @@ export default function Parameters(props: ParametersProps) {
             text="Image Size"
             value={props.size}
             onChange={props.onSizeChange}
-            range={[128, 512]}
+            range={[128, 768]}
             step={64}
             marks
           />
