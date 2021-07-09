@@ -78,8 +78,8 @@ export default function App() {
   async function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (!event.target.files || !event.target.files[0]) return;
     const file = event.target.files[0];
-    setFilename(file.name);
     setImage(await getImageFromFile(file));
+    setFilename(file.name);
     // setInputData(undefined);
     setOutputData(undefined);
   }
