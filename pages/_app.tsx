@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
 import type { AppProps } from "next/app";
-import { CssBaseline, ThemeProvider, useMediaQuery } from "@material-ui/core";
+import { CssBaseline, Grow, ThemeProvider, useMediaQuery } from "@material-ui/core";
 import makeTheme from "../src/theme";
+import { SnackbarProvider } from "notistack";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)", { noSsr: true });
@@ -9,8 +10,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Component {...pageProps} />
+      <SnackbarProvider>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </SnackbarProvider>
     </ThemeProvider>
   );
 }

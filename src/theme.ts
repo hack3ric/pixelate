@@ -37,14 +37,6 @@ export default function makeTheme(prefersDarkMode: boolean): Theme {
         rounded: {
           borderRadius: 8
         }
-      },
-      MuiSnackbarContent: {
-        root: {
-          borderRadius: 8,
-          backgroundColor: type === "dark" ? "#202020" : "#fff",
-          color: type === "dark" ? "#fff" : "rgba(0, 0, 0, 0.87)",
-          fontSize: "1rem"
-        }
       }
     }
   });

@@ -13,6 +13,7 @@ import { PaletteType } from "../image/palette";
 import useLocalStorage from "../use-local-storage";
 import { SidebarPaper } from "./sidebar/common";
 import { DitherMethod, ditherMethods } from "../image/apply-color";
+import { useSnackbar } from "notistack";
 
 const drawerWidth = 340;
 
@@ -44,12 +45,19 @@ const useStyles = makeStyles(theme => createStyles({
     position: "absolute",
     top: 8,
     right: 8
+  },
+  snackbarRoot: {
+    borderRadius: 8,
+    backgroundColor: theme.palette.type === "dark" ? "#202020" : "#fff",
+    color: theme.palette.type === "dark" ? "#fff" : "rgba(0, 0, 0, 0.87)",
+    fontSize: "1rem"
   }
 }));
 
 export default function App() {
   const styles = useStyles();
   const imageWorker = useRef<Comlink.Remote<ImageWorkerApi>>();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [filename, setFilename] = useState<string | undefined>();
   const [image, setImage] = useState<HTMLImageElement | undefined>();
@@ -78,15 +86,28 @@ export default function App() {
   async function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (!event.target.files || !event.target.files[0]) return;
     const file = event.target.files[0];
-    setImage(await getImageFromFile(file));
-    setFilename(file.name);
-    // setInputData(undefined);
-    setOutputData(undefined);
+    try {
+      setImage(await getImageFromFile(file));
+      setFilename(file.name);
+      // setInputData(undefined);
+      setOutputData(undefined);
+    } catch (err) {
+      event.target.value = "";
+      enqueueSnackbar("Failed loading image", {
+        variant: "error",
+        preventDuplicate: false
+      });
+    }
   }
 
   async function handleApply() {
     if (!inputData || !imageWorker.current || generating) return;
     setGenerating(true);
+    const snackbarKey = enqueueSnackbar("Generating", {
+      persist: true,
+      action: <CircularProgress color="secondary" size="1rem" style={{ marginRight: 8 }} />,
+      className: styles.snackbarRoot
+    });
     const output = await imageWorker.current.run(
       inputData,
       size,
@@ -94,6 +115,7 @@ export default function App() {
       ditherMethods[ditherMethod],
       paletteType
     );
+    closeSnackbar(snackbarKey);
     setOutputData(output);
     setGenerating(false);
     setOpenMobileDrawer(false);
@@ -182,12 +204,12 @@ export default function App() {
               <ChevronLeftRounded />
             </Fab>}
       </Hidden>
-      <Snackbar
-        open={generating}
+      {/* <Snackbar
+        open
         message="Generating"
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         action={<CircularProgress color="secondary" size="1rem" style={{ marginRight: 8 }} />}
-      />
+      /> */}
     </div>
   );
 }
