@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, CircularProgress, createStyles, Drawer, Fab, Hidden, makeStyles, Snackbar } from "@material-ui/core";
+import { Button, CircularProgress, createStyles, Drawer, Fab, Hidden, makeStyles } from "@material-ui/core";
 import { getImageFromFile } from "../image/util";
 import Canvas from "./Canvas";
 import { ChevronLeftRounded } from "@material-ui/icons";

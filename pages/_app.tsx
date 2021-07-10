@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import type { AppProps } from "next/app";
-import { CssBaseline, Grow, ThemeProvider, useMediaQuery } from "@material-ui/core";
+import { CssBaseline, ThemeProvider, useMediaQuery } from "@material-ui/core";
 import makeTheme from "../src/theme";
 import { SnackbarProvider } from "notistack";
 
