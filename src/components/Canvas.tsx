@@ -52,7 +52,7 @@ export default function Canvas({ image, fetchImageData, onMouseDown, onMouseUp }
     if (image instanceof HTMLImageElement) {
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
       const data = context.getImageData(0, 0, canvas.width, canvas.height);
-      if (fetchImageData) fetchImageData(data);
+      fetchImageData?.(data);
     } else {
       context.putImageData(image, 0, 0);
     }

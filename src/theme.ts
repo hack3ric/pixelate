@@ -1,10 +1,10 @@
-import { cyan, teal } from "@material-ui/core/colors";
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { cyan } from "@material-ui/core/colors";
+import { createTheme, Theme } from "@material-ui/core/styles";
 
 export default function makeTheme(prefersDarkMode: boolean): Theme {
   const type = prefersDarkMode ? "dark" : "light";
 
-  return createMuiTheme({
+  return createTheme({
     palette: {
       type,
       primary: { main: cyan[500], contrastText: type === "dark" ? "#000" : "#fff" },
