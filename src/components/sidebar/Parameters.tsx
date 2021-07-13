@@ -71,7 +71,7 @@ interface ResizeParameterProps {
   aspectRatio?: number; // Also acts as enable/disable toggle
 }
 
-function ResizeParameter({ options, setOptions, aspectRatio }: ResizeParameterProps) {
+function ResizeParameter({ options: { size, dimension }, setOptions, aspectRatio }: ResizeParameterProps) {
   const styles = useSidebarStyles();
 
   function handleFocus(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -87,6 +87,19 @@ function ResizeParameter({ options, setOptions, aspectRatio }: ResizeParameterPr
     }
   }
 
+  let widthValue: number;
+  let heightValue: number;
+  if (aspectRatio == null) {
+    widthValue = 0;
+    heightValue = 0;
+  } else if (dimension === "width") {
+    widthValue = size;
+    heightValue = Math.trunc(size / aspectRatio);
+  } else {
+    widthValue = Math.trunc(size * aspectRatio);
+    heightValue = size;
+  }
+
   return (
     <ListItem className={styles.parameter}>
       <ParameterText>Image Size</ParameterText>
@@ -95,7 +108,7 @@ function ResizeParameter({ options, setOptions, aspectRatio }: ResizeParameterPr
           disabled={aspectRatio == null}
           label="Width"
           InputProps={{ type: "number" }}
-          value={aspectRatio == null ? 0 : (options.dimension === "width" ? options.size : Math.floor(options.size * aspectRatio)).toString()}
+          value={widthValue.toString()}
           onFocus={handleFocus}
           onChange={getHandleChange("width")}
           style={{ marginRight: 8 }}
@@ -104,7 +117,7 @@ function ResizeParameter({ options, setOptions, aspectRatio }: ResizeParameterPr
           disabled={aspectRatio == null}
           label="Height"
           InputProps={{ type: "number" }}
-          value={aspectRatio == null ? 0 : (options.dimension === "height" ? options.size : Math.floor(options.size / aspectRatio)).toString()}
+          value={heightValue.toString()}
           onFocus={handleFocus}
           onChange={getHandleChange("height")}
         />
