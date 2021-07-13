@@ -5,7 +5,7 @@ import { PaletteType } from "./palette";
 import medianCut from "./palette/median-cut";
 import octree from "./palette/octree";
 
-function run(input: ImageData, size: number, colors: number, dither: Dither, paletteType: PaletteType): ImageData {
+function run(input: ImageData, size: number, dimension: "width" | "height", colors: number, dither: Dither, paletteType: PaletteType): ImageData {
   console.time("total");
   
   const iw = input.width;
@@ -13,7 +13,7 @@ function run(input: ImageData, size: number, colors: number, dither: Dither, pal
 
   let ow: number;
   let oh: number;
-  if (iw > ih) {
+  if (dimension === "width") {
     ow = size;
     oh = Math.trunc(size / iw * ih);
   } else {

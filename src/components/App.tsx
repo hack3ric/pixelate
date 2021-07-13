@@ -106,6 +106,7 @@ export default function App() {
     const output = await imageWorker.current.run(
       inputData,
       options.size,
+      options.dimension,
       options.colorCount,
       ditherMethods[options.ditherMethod],
       options.paletteType
@@ -135,7 +136,7 @@ export default function App() {
       </Button>
       <Button color="primary" onClick={handleApply} disabled={generating || !inputData}>Apply</Button>
     </SidebarPaper>
-    <Parameters options={options} setOptions={setOptions} />
+    <Parameters input={inputData} options={options} setOptions={setOptions} />
     <Export
       imageWorker={imageWorker}
       filename={filename}

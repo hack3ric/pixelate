@@ -4,6 +4,7 @@ import { PaletteType } from "./image/palette";
 
 export type Options = {
   size: number,
+  dimension: "width" | "height",
   paletteType: PaletteType,
   colorCount: number,
   ditherMethod: DitherMethod,
@@ -12,6 +13,7 @@ export type Options = {
 
 export type OptionsAction =
   | ["size", number]
+  | ["dimension", "width" | "height"]
   | ["paletteType", PaletteType]
   | ["colorCount", number]
   | ["ditherMethod", DitherMethod]
@@ -19,6 +21,7 @@ export type OptionsAction =
 
 export const initialOptions: Options = {
   size: 320,
+  dimension: "width",
   paletteType: "octree",
   colorCount: 32,
   ditherMethod: "aktinson",
