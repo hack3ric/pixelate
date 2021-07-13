@@ -10,6 +10,13 @@ export type Options = {
   pixelScale: number
 };
 
+export type OptionsAction =
+  | ["size", number]
+  | ["paletteType", PaletteType]
+  | ["colorCount", number]
+  | ["ditherMethod", DitherMethod]
+  | ["pixelScale", number];
+
 export const initialOptions: Options = {
   size: 320,
   paletteType: "octree",
@@ -18,18 +25,22 @@ export const initialOptions: Options = {
   pixelScale: 4
 };
 
-export type OptionsAction =
-  | ["size", number]
-  | ["paletteType", PaletteType]
-  | ["colorCount", number]
-  | ["ditherMethod", DitherMethod]
-  | ["pixelScale", number]
-
 export function optionsReducer(options: Options, action: OptionsAction): Options {
-  return { ...options, [action[0]]: action[1] }
+  if (typeof window !== "undefined") {
+    localStorage.setItem(action[0], JSON.stringify(action[1]));
+  }
+  return { ...options, [action[0]]: action[1] };
 }
 
 export function useOptions() {
-  // TODO: localStorage
-  return useReducer(optionsReducer, initialOptions);
+  const init: { [key: string]: any } = {};
+  if (typeof window !== "undefined") {
+    for (let key in initialOptions) {
+      const itemString = localStorage.getItem(key);
+      if (itemString != null) {
+        init[key] = JSON.parse(itemString);
+      }
+    }
+  }
+  return useReducer(optionsReducer, { ...initialOptions, ...init });
 }
