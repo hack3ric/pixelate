@@ -9,11 +9,10 @@ import * as Comlink from "comlink";
 import Head from "next/head";
 import Parameters from "./sidebar/Parameters";
 import Export from "./sidebar/Export";
-import { PaletteType } from "../image/palette";
-import useLocalStorage from "../use-local-storage";
 import { SidebarPaper } from "./sidebar/common";
-import { DitherMethod, ditherMethods } from "../image/apply-color";
+import { ditherMethods } from "../image/apply-color";
 import { useSnackbar } from "notistack";
+import { useOptions } from "../options";
 
 const drawerWidth = 340;
 
@@ -68,11 +67,7 @@ export default function App() {
   const [generating, setGenerating] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
 
-  const [size, setSize] = useLocalStorage("size", 320);
-  const [colorCount, setColorCount] = useLocalStorage("colorCount", 32);
-  const [paletteType, setPaletteType] = useLocalStorage<PaletteType>("paletteType", "octree");
-  const [ditherMethod, setDitherMethod] = useLocalStorage<DitherMethod>("ditherMethod", "aktinson");
-  const [pixelScale, setPixelScale] = useLocalStorage("pixelScale", 4);
+  const [options, setOptions] = useOptions();
 
   useEffect(() => {
     const worker = new Worker(
@@ -110,10 +105,10 @@ export default function App() {
     });
     const output = await imageWorker.current.run(
       inputData,
-      size,
-      colorCount,
-      ditherMethods[ditherMethod],
-      paletteType
+      options.size,
+      options.colorCount,
+      ditherMethods[options.ditherMethod],
+      options.paletteType
     );
     closeSnackbar(snackbarKey);
     setOutputData(output);
@@ -140,18 +135,13 @@ export default function App() {
       </Button>
       <Button color="primary" onClick={handleApply} disabled={generating || !inputData}>Apply</Button>
     </SidebarPaper>
-    <Parameters
-      size={size} onSizeChange={setSize}
-      colorCount={colorCount} onColorCountChange={setColorCount}
-      paletteType={paletteType} onPaletteTypeChange={setPaletteType}
-      ditherMethod={ditherMethod} onDitherMethodChange={setDitherMethod}
-    />
+    <Parameters options={options} setOptions={setOptions} />
     <Export
       imageWorker={imageWorker}
       filename={filename}
       outputData={outputData}
-      pixelScale={pixelScale}
-      onPixelScaleChange={setPixelScale}
+      pixelScale={options.pixelScale}
+      onPixelScaleChange={v => setOptions(["pixelScale", v])}
     />
   </>;
 
