@@ -14,13 +14,7 @@ export interface ParametersProps {
 
 export default function Parameters({ input, options, setOptions }: ParametersProps) {
   const [open, setOpen] = useState(true);
-  const styles = useSidebarStyles();
-  let aspectRatio: number | undefined;
-  if (input) {
-    aspectRatio = input.width / input.height;
-  } else {
-    aspectRatio = 4/3;
-  }
+  const aspectRatio = input ? input.width / input.height : undefined;
 
   return (
     <SidebarPaper>
@@ -30,43 +24,11 @@ export default function Parameters({ input, options, setOptions }: ParametersPro
           {open ? <ExpandLessRounded /> : <ExpandMoreRounded />}
         </ListItem>
         <Collapse in={open}>
-          {/* <SliderParameter
-            text="Image Size"
-            value={options.size}
-            onChange={v => setOptions(["size", v])}
-            range={[128, 768]}
-            step={64}
-            marks
-          /> */}
-          <ListItem className={styles.parameter}>
-            <ParameterText>Image Size</ParameterText>
-            <div style={{ display: "flex" }}>
-              <TextField
-                label="Width"
-                value={options.dimension === "width" ? options.size.toString() : Math.floor(options.size * aspectRatio).toString()}
-                onFocus={e => e.currentTarget.select()}
-                onChange={e => {
-                  setOptions(["dimension", "width"]);
-                  const value = parseInt(e.currentTarget.value);
-                  const validValue = isNaN(value) ? 0 : value < 0 ? -value : value;
-                  setOptions(["size", validValue]);
-                }}
-                InputProps={{ type: "number" }}
-                style={{ marginRight: 8 }}
-              />
-              <TextField
-                label="Height"
-                value={options.dimension === "height" ? options.size.toString() : Math.floor(options.size / aspectRatio).toString()}
-                onFocus={e => e.currentTarget.select()}
-                onChange={e => {
-                  setOptions(["dimension", "height"]);
-                  const value = parseInt(e.currentTarget.value);
-                  const validValue = isNaN(value) ? 0 : value < 0 ? -value : value;
-                  setOptions(["size", validValue]);
-                }}
-              />
-            </div>
-          </ListItem>
+          <ResizeParameter
+            aspectRatio={aspectRatio}
+            options={options}
+            setOptions={setOptions}
+          />
           <RadioParameter<PaletteType>
             text="Palette Type"
             value={options.paletteType}
@@ -101,4 +63,52 @@ export default function Parameters({ input, options, setOptions }: ParametersPro
       </List>
     </SidebarPaper>
   );
+}
+
+interface ResizeParameterProps {
+  options: Options;
+  setOptions: (v: OptionsAction) => void;
+  aspectRatio?: number; // Also acts as enable/disable toggle
+}
+
+function ResizeParameter({ options, setOptions, aspectRatio }: ResizeParameterProps) {
+  const styles = useSidebarStyles();
+
+  function handleFocus(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    e.currentTarget.select();
+  }
+
+  function getHandleChange(dimension: "width" | "height") {
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setOptions(["dimension", dimension]);
+      const value = parseInt(e.currentTarget.value);
+      const validValue = isNaN(value) ? 0 : value < 0 ? -value : value;
+      setOptions(["size", validValue]);
+    }
+  }
+
+  return (
+    <ListItem className={styles.parameter}>
+      <ParameterText>Image Size</ParameterText>
+      <div style={{ display: "flex" }}>
+        <TextField
+          disabled={aspectRatio == null}
+          label="Width"
+          InputProps={{ type: "number" }}
+          value={aspectRatio == null ? 0 : (options.dimension === "width" ? options.size : Math.floor(options.size * aspectRatio)).toString()}
+          onFocus={handleFocus}
+          onChange={getHandleChange("width")}
+          style={{ marginRight: 8 }}
+        />
+        <TextField
+          disabled={aspectRatio == null}
+          label="Height"
+          InputProps={{ type: "number" }}
+          value={aspectRatio == null ? 0 : (options.dimension === "height" ? options.size : Math.floor(options.size / aspectRatio)).toString()}
+          onFocus={handleFocus}
+          onChange={getHandleChange("height")}
+        />
+      </div>
+    </ListItem>
+  )
 }
