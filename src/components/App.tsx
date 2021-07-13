@@ -204,12 +204,6 @@ export default function App() {
               <ChevronLeftRounded />
             </Fab>}
       </Hidden>
-      {/* <Snackbar
-        open
-        message="Generating"
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        action={<CircularProgress color="secondary" size="1rem" style={{ marginRight: 8 }} />}
-      /> */}
     </div>
   );
 }
