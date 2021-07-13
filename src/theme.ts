@@ -30,6 +30,13 @@ export default function makeTheme(prefersDarkMode: boolean): Theme {
             height: "100%",
             overflow: "hidden",
             userSelect: "none"
+          },
+          "input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button": {
+            WebkitAppearance: "none",
+            margin: 0
+          },
+          "input[type=number]": {
+            MozAppearance: "textfield"
           }
         }
       },
