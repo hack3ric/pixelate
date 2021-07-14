@@ -42,6 +42,11 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
     document.body.removeChild(link);
   }
 
+  const displayDimensions = outputData ?? dimensions;
+  const displayMessage = displayDimensions
+    ? `${displayDimensions.width * pixelScale} x ${displayDimensions.height * pixelScale}`
+    : `${pixelScale}x Pixelated Image Size`;
+
   return (
     <SidebarPaper>
       <List disablePadding>
@@ -62,9 +67,7 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
             <Button disabled={!outputData} color="secondary" onClick={handleExport}>Export</Button>
             <div style={{ flexGrow: 1 }}></div>
             <Typography variant="body2" color="textSecondary">
-              {dimensions
-                ? `${dimensions.width * pixelScale} x ${dimensions.height * pixelScale}`
-                : `${pixelScale}x Pixelated Image Size`}
+              {displayMessage}
             </Typography>
           </ListItem>
         </Collapse>
