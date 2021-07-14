@@ -1,9 +1,11 @@
 import { useReducer } from "react";
 import { DitherMethod } from "./image/apply-color";
 import { PaletteType } from "./image/palette";
+import { Dimension } from "./image/resize";
 
 export type Options = {
   size: number,
+  dimension: Dimension,
   paletteType: PaletteType,
   colorCount: number,
   ditherMethod: DitherMethod,
@@ -12,6 +14,7 @@ export type Options = {
 
 export type OptionsAction =
   | ["size", number]
+  | ["dimension", Dimension]
   | ["paletteType", PaletteType]
   | ["colorCount", number]
   | ["ditherMethod", DitherMethod]
@@ -19,6 +22,7 @@ export type OptionsAction =
 
 export const initialOptions: Options = {
   size: 320,
+  dimension: "width",
   paletteType: "octree",
   colorCount: 32,
   ditherMethod: "aktinson",
@@ -42,5 +46,9 @@ export function useOptions() {
       }
     }
   }
-  return useReducer(optionsReducer, { ...initialOptions, ...init });
+  const [options, _setOptions] = useReducer(optionsReducer, { ...initialOptions, ...init });
+  function setOptions(...v: OptionsAction) {
+    _setOptions(v);
+  }
+  return [options, setOptions] as const;
 }

@@ -1,25 +1,23 @@
 import * as Comlink from "comlink";
-import { resizeNearestNeighbor, resizeDownSupersampling } from "./resize";
+import { resizeNearestNeighbor, resizeDownSupersampling, Dimensions } from "./resize";
 import applyColor, { Dither } from "./apply-color";
 import { PaletteType } from "./palette";
 import medianCut from "./palette/median-cut";
 import octree from "./palette/octree";
 
-function run(input: ImageData, size: number, colors: number, dither: Dither, paletteType: PaletteType): ImageData {
+function run(
+  input: ImageData,
+  dimensions: Dimensions,
+  colors: number,
+  dither: Dither,
+  paletteType: PaletteType
+): ImageData {
   console.time("total");
   
   const iw = input.width;
   const ih = input.height;
+  const { width: ow, height: oh } = dimensions;
 
-  let ow: number;
-  let oh: number;
-  if (iw > ih) {
-    ow = size;
-    oh = Math.trunc(size / iw * ih);
-  } else {
-    ow = Math.trunc(size / ih * iw);
-    oh = size;
-  }
   let output: ImageData;
   if (iw === ow && ih === oh) {
     output = new ImageData(input.data, ow, oh);
