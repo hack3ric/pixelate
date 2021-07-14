@@ -1,5 +1,6 @@
-import { makeStyles, createStyles, ListItemText, ListItem, Mark, Slider, Paper, RadioGroup, FormControlLabel, Radio } from "@material-ui/core";
-import React from "react";
+import { makeStyles, createStyles, ListItemText, ListItem, Mark, Slider, Paper, RadioGroup, FormControlLabel, Radio, List, Collapse } from "@material-ui/core";
+import { ExpandLessRounded, ExpandMoreRounded } from "@material-ui/icons";
+import React, { useState } from "react";
 
 export const useSidebarStyles = makeStyles(theme => createStyles({
   paper: {
@@ -97,5 +98,28 @@ export function RadioParameter<T extends string | number>(props: RadioParameterP
           ))}
       </RadioGroup>
     </ListItem>
+  );
+}
+
+export interface SidebarListProps {
+  label: React.ReactNode;
+  children?: React.ReactNode;
+}
+
+export function SidebarList({ label, children }: SidebarListProps) {
+  const [open, setOpen] = useState(true);
+
+  return (
+    <SidebarPaper>
+      <List disablePadding>
+        <ListItem dense button onClick={() => setOpen(!open)}>
+          <ListItemText primary={label} />
+          {open ? <ExpandLessRounded /> : <ExpandMoreRounded />}
+        </ListItem>
+        <Collapse in={open}>
+          {children}
+        </Collapse>
+      </List>
+    </SidebarPaper>
   );
 }

@@ -1,11 +1,10 @@
-import { Collapse, List, ListItem, ListItemText, TextField } from "@material-ui/core";
-import { ExpandLessRounded, ExpandMoreRounded } from "@material-ui/icons";
-import React, { useState } from "react";
+import { Collapse, ListItem, TextField } from "@material-ui/core";
+import React from "react";
 import { DitherMethod } from "../../image/apply-color";
 import { PaletteType } from "../../image/palette";
 import { Dimensions } from "../../image/resize";
 import { Options, OptionsAction } from "../../options";
-import { SliderParameter, SidebarPaper, RadioParameter, useSidebarStyles, ParameterText } from "./common";
+import { SliderParameter, RadioParameter, useSidebarStyles, ParameterText, SidebarList } from "./common";
 
 export interface ParametersProps {
   dimensions?: Dimensions;
@@ -14,53 +13,43 @@ export interface ParametersProps {
 }
 
 export default function Parameters({ dimensions, options, setOptions }: ParametersProps) {
-  const [open, setOpen] = useState(true);
-
   return (
-    <SidebarPaper>
-      <List disablePadding>
-        <ListItem dense button onClick={() => setOpen(!open)}>
-          <ListItemText primary="Parameters" />
-          {open ? <ExpandLessRounded /> : <ExpandMoreRounded />}
-        </ListItem>
-        <Collapse in={open}>
-          <ResizeParameter
-            dimensions={dimensions}
-            setOptions={setOptions}
-          />
-          <RadioParameter<PaletteType>
-            text="Palette Type"
-            value={options.paletteType}
-            onChange={v => setOptions("paletteType", v)}
-            labels={{
-              "octree": "Octree",
-              "median-cut-variance": "Median Cut (variance)",
-              "median-cut-range": "Median Cut (range)"
-            }}
-          />
-          <Collapse in={options.paletteType !== "octree"}>
-            <SliderParameter
-              text="Colour Count"
-              value={options.colorCount}
-              onChange={v => setOptions("colorCount", v)}
-              range={[8, 64]}
-              step={4}
-              marks
-            />
-          </Collapse>
-          <RadioParameter<DitherMethod>
-            text="Dithering Method"
-            value={options.ditherMethod}
-            onChange={v => setOptions("ditherMethod", v)}
-            labels={{
-              "floyd-steinberg": "Floyd-Steinberg (nerfed)",
-              "aktinson": "Aktinson",
-              "none": "None"
-            }}
-          />
-        </Collapse>
-      </List>
-    </SidebarPaper>
+    <SidebarList label="Parameters">
+      <ResizeParameter
+        dimensions={dimensions}
+        setOptions={setOptions}
+      />
+      <RadioParameter<PaletteType>
+        text="Palette Type"
+        value={options.paletteType}
+        onChange={v => setOptions("paletteType", v)}
+        labels={{
+          "octree": "Octree",
+          "median-cut-variance": "Median Cut (variance)",
+          "median-cut-range": "Median Cut (range)"
+        }}
+      />
+      <Collapse in={options.paletteType !== "octree"}>
+        <SliderParameter
+          text="Colour Count"
+          value={options.colorCount}
+          onChange={v => setOptions("colorCount", v)}
+          range={[8, 64]}
+          step={4}
+          marks
+        />
+      </Collapse>
+      <RadioParameter<DitherMethod>
+        text="Dithering Method"
+        value={options.ditherMethod}
+        onChange={v => setOptions("ditherMethod", v)}
+        labels={{
+          "floyd-steinberg": "Floyd-Steinberg (nerfed)",
+          "aktinson": "Aktinson",
+          "none": "None"
+        }}
+      />
+    </SidebarList>
   );
 }
 

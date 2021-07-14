@@ -1,7 +1,6 @@
-import { Collapse, List, ListItem, ListItemText, Typography, Button } from "@material-ui/core";
-import { ExpandLessRounded, ExpandMoreRounded } from "@material-ui/icons";
-import React, { useState } from "react";
-import { SliderParameter, SidebarPaper } from "./common";
+import { ListItem, Typography, Button } from "@material-ui/core";
+import React from "react";
+import { SliderParameter, SidebarList } from "./common";
 import * as Comlink from "comlink";
 import { ImageWorkerApi } from "../../image/image.worker";
 import { Dimensions } from "../../image/resize";
@@ -16,8 +15,6 @@ export interface ExportProps {
 }
 
 export default function Export({ imageWorker, filename, outputData, pixelScale, onPixelScaleChange, dimensions }: ExportProps) {
-  const [open, setOpen] = useState(true);
-
   async function handleExport() {
     if (!filename || !outputData || !imageWorker.current) return;
 
@@ -48,30 +45,22 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
     : `${pixelScale}x Pixelated Image Size`;
 
   return (
-    <SidebarPaper>
-      <List disablePadding>
-        <ListItem dense button onClick={() => setOpen(!open)}>
-          <ListItemText primary="Export" />
-          {open ? <ExpandLessRounded /> : <ExpandMoreRounded />}
-        </ListItem>
-        <Collapse in={open}>
-          <SliderParameter
-            text="Pixel Scale"
-            value={pixelScale}
-            onChange={onPixelScaleChange}
-            range={[1, 8]}
-            step={1}
-            marks
-          />
-          <ListItem dense style={{ paddingLeft: 8 }}>
-            <Button disabled={!outputData} color="secondary" onClick={handleExport}>Export</Button>
-            <div style={{ flexGrow: 1 }}></div>
-            <Typography variant="body2" color="textSecondary">
-              {displayMessage}
-            </Typography>
-          </ListItem>
-        </Collapse>
-      </List>
-    </SidebarPaper>
+    <SidebarList label="Export">
+      <SliderParameter
+        text="Pixel Scale"
+        value={pixelScale}
+        onChange={onPixelScaleChange}
+        range={[1, 8]}
+        step={1}
+        marks
+      />
+      <ListItem dense style={{ paddingLeft: 8 }}>
+        <Button disabled={!outputData} color="secondary" onClick={handleExport}>Export</Button>
+        <div style={{ flexGrow: 1 }}></div>
+        <Typography variant="body2" color="textSecondary">
+          {displayMessage}
+        </Typography>
+      </ListItem>
+    </SidebarList>
   );
 }
