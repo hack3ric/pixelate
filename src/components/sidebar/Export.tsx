@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { SliderParameter, SidebarPaper } from "./common";
 import * as Comlink from "comlink";
 import { ImageWorkerApi } from "../../image/image.worker";
+import { Dimensions } from "../../image/resize";
 
 export interface ExportProps {
   imageWorker: React.MutableRefObject<Comlink.Remote<ImageWorkerApi> | undefined>;
@@ -11,9 +12,10 @@ export interface ExportProps {
   outputData?: ImageData;
   pixelScale: number;
   onPixelScaleChange: (newValue: number) => void;
+  dimensions?: Dimensions;
 }
 
-export default function Export({ imageWorker, filename, outputData, pixelScale, onPixelScaleChange }: ExportProps) {
+export default function Export({ imageWorker, filename, outputData, pixelScale, onPixelScaleChange, dimensions }: ExportProps) {
   const [open, setOpen] = useState(true);
 
   async function handleExport() {
@@ -60,8 +62,8 @@ export default function Export({ imageWorker, filename, outputData, pixelScale, 
             <Button disabled={!outputData} color="secondary" onClick={handleExport}>Export</Button>
             <div style={{ flexGrow: 1 }}></div>
             <Typography variant="body2" color="textSecondary">
-              {outputData
-                ? `${outputData.width * pixelScale} x ${outputData.height * pixelScale}`
+              {dimensions
+                ? `${dimensions.width * pixelScale} x ${dimensions.height * pixelScale}`
                 : `${pixelScale}x Pixelated Image Size`}
             </Typography>
           </ListItem>

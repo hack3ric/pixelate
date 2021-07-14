@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Button, CircularProgress, createStyles, Drawer, Fab, Hidden, makeStyles } from "@material-ui/core";
 import { getImageFromFile } from "../image/util";
 import Canvas from "./Canvas";
@@ -13,6 +13,7 @@ import { SidebarPaper } from "./sidebar/common";
 import { ditherMethods } from "../image/apply-color";
 import { useSnackbar } from "notistack";
 import { useOptions } from "../options";
+import { Dimensions } from "../image/resize";
 
 const drawerWidth = 340;
 
@@ -66,8 +67,27 @@ export default function App() {
   const [openMobileDrawer, setOpenMobileDrawer] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
-
   const [options, setOptions] = useOptions();
+
+  const dimensions: Dimensions | undefined = useMemo(() => {
+    const size = options.size;
+    if (!image) {
+      return undefined;
+    } else {
+      const aspectRatio = image.width / image.height;
+      if (options.dimension === "width") {
+        return {
+          width: size,
+          height: Math.round(size / aspectRatio)
+        };
+      } else {
+        return {
+          width: Math.round(size * aspectRatio),
+          height: size
+        };
+      }
+    }
+  }, [options.size, options.dimension, image]);
 
   useEffect(() => {
     const worker = new Worker(
@@ -96,7 +116,7 @@ export default function App() {
   }
 
   async function handleApply() {
-    if (!inputData || !imageWorker.current || generating) return;
+    if (!inputData || !dimensions || !imageWorker.current || generating) return;
     setGenerating(true);
     const snackbarKey = enqueueSnackbar("Generating", {
       persist: true,
@@ -105,8 +125,7 @@ export default function App() {
     });
     const output = await imageWorker.current.run(
       inputData,
-      options.size,
-      options.dimension,
+      dimensions,
       options.colorCount,
       ditherMethods[options.ditherMethod],
       options.paletteType
@@ -136,13 +155,18 @@ export default function App() {
       </Button>
       <Button color="primary" onClick={handleApply} disabled={generating || !inputData}>Apply</Button>
     </SidebarPaper>
-    <Parameters input={inputData} options={options} setOptions={setOptions} />
+    <Parameters
+      options={options}
+      setOptions={setOptions}
+      dimensions={dimensions}
+    />
     <Export
       imageWorker={imageWorker}
       filename={filename}
       outputData={outputData}
       pixelScale={options.pixelScale}
-      onPixelScaleChange={v => setOptions(["pixelScale", v])}
+      onPixelScaleChange={v => setOptions("pixelScale", v)}
+      dimensions={dimensions}
     />
   </>;
 

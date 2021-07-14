@@ -1,5 +1,8 @@
 import { xyToPos } from "./util";
 
+export type Dimension = "width" | "height";
+export type Dimensions = { [key in Dimension]: number };
+
 export function resizeNearestNeighbor(from: ImageData, to: ImageData) {
   const fw = from.width;
   const fh = from.height;
